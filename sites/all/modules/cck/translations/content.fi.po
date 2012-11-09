@@ -1,0 +1,236 @@
+# $Id: content.pot,v 1.1.2.11 2009/06/16 17:05:11 hass Exp $
+#
+# LANGUAGE translation of Drupal (root)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  content.module,v 1.301.2.106 2009/06/02 12:24:04 yched
+#  content.install,v 1.85.2.31 2009/04/23 18:37:10 yched
+#  content.info,v 1.6 2007/07/04 23:46:29 yched
+#  content.rules.inc,v 1.1.2.6 2009/04/30 09:56:07 fago
+#  content.views.inc,v 1.1.2.25 2009/04/11 14:50:53 yched
+#  content_copy.info,v 1.6 2008/04/23 18:01:48 dww
+#  content_permissions.info,v 1.2 2008/04/23 18:01:52 dww
+#  fieldgroup.info,v 1.6.2.1 2008/09/22 18:25:21 karens
+#  nodereference.info,v 1.8 2008/04/23 18:02:07 dww
+#  number.info,v 1.7 2008/04/23 18:02:16 dww
+#  optionwidgets.info,v 1.7 2008/04/23 18:02:24 dww
+#  text.info,v 1.9 2008/04/23 18:02:31 dww
+#  userreference.info,v 1.8 2008/04/23 18:02:38 dww
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-06-16 19:00+0200\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: content.module:21
+msgid "The content module, a required component of the Content Construction Kit (CCK), allows administrators to associate custom fields with content types. In Drupal, content types are used to define the characteristics of a post, including the title and description of the fields displayed on its add and edit pages. Using the content module (and the other helper modules included in CCK), custom fields beyond the default \"Title\" and \"Body\" may be added. CCK features are accessible through tabs on the <a href=\"@content-types\">content types administration page</a>. (See the <a href=\"@node-help\">node module help page</a> for more information about content types.)"
+msgstr "Sisältömoduuli joka on pakollinen osa CCK:ta sallii ylläpitäjien liittää kustomoituja kenttiä sisltötyyppeihin. Drupalissa sisältötyyppejä käytetään määrittelemään postin yksityiskohtia kuten otsikko, kuvaus ja näytettävien kenttien kuvaukset sisällön muokkaus ja lisäyssivuilla. Sisältömoduulin (ja muiden CCK:hon sisältyvien apumoduulien) käyttö sallii kustomoitujen kenttien lisäämisen otsikon ja rungon alle. CCK:n ominaisuudet läytyvät tabien alta <a href=\"@content-types\">sisältötyyppien hallintasivulta</a>. (Lisätietoa sisältötyypeistä löytyy <a href=\"@node-help\">solmu-moduulin tukisivulta</a>.)"
+
+#: content.module:22
+msgid "When adding acustom field to a content type, you determine its type (whether it will contain text, numbers, or references to other objects) and how it will be displayed (either as a text field or area, a select box, checkbox, radio button, or autocompleting field). A field may have multiple values (i.e., a \"person\" may have multiple e-mail addresses) or a single value (i.e., an \"employee\" has a single employee identification number). As you add and edit fields, CCK automatically adjusts the structure of the database as necessary. CCK also provides a number of other features, including intelligent caching for your custom data, an import and export facility for content type definitions, and integration with other contributed modules."
+msgstr "Kun lisäät kustomoidun kentän sisältötyyppiin, voit määritellä sen tyypin (sisältääkö se tekstiä, numeroita tai viittauksia muihin objekteihin) ja kuinka ne näytetään (tekstikenttänä, tekstialueena, valintalaatikkona, valintalistana, radionappina tai automaattisesti täyttyvänä kenttänä). Kentällä voi olla useita arvoja (esim. henkilöllä voi olla useita sähköpostiosoitteita) tai ainoastaan yksi arvo (esim. työntekijän tunnistenumero). Kun muokkaat tai lisäät kenttiä, CCK päivittää automaattisesti tietokannan rakennetta tarvittavin osin. CCK myös tarjoaa koko joukon muita ominaisuuksia mukaanlukien oman kustomoidun tietosi älykkään välimuistituksen sekä sisältötyyppien vienti ja tuontitoiminnot sekä integraation muihin tarjollaoleviin moduuleihin."
+
+#: content.module:23
+msgid "Custom field types are provided by a set of optional modules included with CCK (each module provides a different type). The <a href=\"@modules\">modules page</a> allows you to enable or disable CCK components. A default installation of CCK includes:"
+msgstr "Kustomoidut kenttätyypit löytyvät CCK:n mukana tulevien valinnaisten moduulien joukosta (jokainen moduuli tarjoaa eri tyypin). <a href=\"@modules\">Moduulisivulla</a> voit aktivoida tai poistaa käytöstä CCK:n komponentteja. CCK:n perusasennus sisältää seuraavaa:"
+
+#: content.module:25
+msgid "<em>number</em>, which adds numeric field types, in integer, decimal or floating point form. You may define a set of allowed inputs, or specify an allowable range of values. A variety of common formats for displaying numeric data are available."
+msgstr "<em>numero</em>, joka lisää numeeriset kenttätyypit joko muuttuja, desimaali tai kelluvan luvun muodossa. Voit myös määrittää joukon sallittuja syöteitä tai määrittää miltä väliltä sallittujen arvojen on oltava. Tarjolla on koko joukko yleisimpiä tapoja esittää numeerista dataa."
+
+#: content.module:26
+msgid "<em>text</em>, which adds text field types. A text field may contain plain text only, or optionally, may use Drupal's input format filters to securely manage rich text input. Text input fields may be either a single line (text field), multiple lines (text area), or for greater input control, a select box, checkbox, or radio buttons. If desired, CCK can validate the input to a set of allowed values."
+msgstr "<em>teksti</em>, joka lisää tekstityypit. Tekstityypit sisältävät ainoastaa puhdasta tekstiä tai vaihtoehtoisesti voit määrittää Drupalin syöttötyyppisuodattimien avulla rikasta sisältöä. Tekstikentät voivat olla joko yhden (tekstikenttä) tai usean rivin mittaisia (tekstialue) tai jos haluat antaa suurempaa hallittavuutta, myös radio napit, valintaruutu tai valintalista. Jos haluat, CCK voi validoida syötetyn datan joukkoon sallittuja arvoja."
+
+#: content.module:27
+msgid "<em>nodereference</em>, which creates custom references between Drupal nodes. By adding a <em>nodereference</em> field and two different content types, for instance, you can easily create complex parent/child relationships between data (multiple \"employee\" nodes may contain a <em>nodereference</em> field linking to an \"employer\" node)."
+msgstr "<em>solmureferenssi</em>, joka luo kustomoidun referenssin muihin Drupalin solmuihin. Lisäämällä <em>solmureferenssi</em> kentän ja kaksi eri sisältötyyppiä, esimerkiksi, voit tarjota kompleksimpia isäntä/lapsi suhteita datan välillä (useilla \"työntekijä\" solmuilla voi olla <em>solmureferenssi</em> joka linkittää ne \"työntekijä\" solmuun)."
+
+#: content.module:28
+msgid "<em>userreference</em>, which creates custom references to your sites' user accounts. By adding a <em>userreference</em> field, you can create complex relationships between your site's users and posts. To track user involvement in a post beyond Drupal's standard <em>Authored by</em> field, for instance, add a <em>userreference</em> field named \"Edited by\" to a content type to store a link to an editor's user account page."
+msgstr "<em>käyttäjäreferenssi</em>, joka luo kustomisoidun referenssin sivustosi käytäjätileihin. Lisäämällä <em>userreference</em> kentän voit luoda komplekseja suhteita sivustosi eri käyttäjien ja postien välille. Jäljittääksesi postia esimerkiksi Drupalin standardissa <em>Tekijänimi</em> kentässä, lisäät vain <em>userreference</em> nimllä \"Editoinut\" sisältötyyppiin. Näin muodostuu linkki solmua muokanneen käyttäjän profiiliin."
+
+#: content.module:29
+msgid "<em>fieldgroup</em>, which creates collapsible fieldsets to hold a group of related fields. A fieldset may either be open or closed by default. The order of your fieldsets, and the order of fields within a fieldset, is managed via a drag-and-drop interface provided by content module."
+msgstr "<em>kenttäryhmä</em>, joka luo piennettävän kenttäryhmän auttamaan kenttien ryhmittelyssä. Kenttäryhmä voi oletuksena olla joko avoin tai suljettu. Kenttäryhmien järjestys, ja kenttien järjestys kenttäryhmän sisällä on määritettävissä sisältömoduulin tarjoaman vedä-pudota käyttöliittymän avulla."
+
+#: content.module:31
+msgid "For more information, see the online handbook entry for <a href=\"@handbook-cck\">CCK</a> or the <a href=\"@project-cck\">CCK project page</a>."
+msgstr "Lisätietoa saat <a href=\"@handbook-cck\">CCK online-käsikirjasta</a> tai <a href=\"@project-cck\">CCK projektin sivuilta</a>."
+
+#: content.module:492
+msgid "This field is required."
+msgstr "Pakollinen kenttä"
+
+#: content.module:496
+msgid "!title: !required"
+msgstr "!title: !required"
+
+#: content.module:1854
+msgid "Basic"
+msgstr "Perus"
+
+#: content.module:1867;1870
+msgid "RSS"
+msgstr "RSS"
+
+#: content.module:1880
+msgid "Search"
+msgstr "Hae"
+
+#: content.module:1883
+msgid "Search Index"
+msgstr "Hakuindeksi"
+
+#: content.module:1887
+msgid "Search Result"
+msgstr "Hakutulokset"
+
+#: content.module:1897;1900
+msgid "Print"
+msgstr "Tulosta"
+
+#: content.module:2348;2355
+msgid "Node module form."
+msgstr "Solmumoduulin syöttökaavake."
+
+#: content.module:2362
+msgid "Language"
+msgstr "Kieli"
+
+#: content.module:2363
+msgid "Locale module form."
+msgstr "Paikkamoduulin syöttökaavake."
+
+#: content.module:2369
+msgid "Menu settings"
+msgstr "Valikkoasetukset"
+
+#: content.module:2370
+msgid "Menu module form."
+msgstr "Valikkomoduulin syöttökaavake."
+
+#: content.module:2376
+msgid "Taxonomy"
+msgstr "Taksonomia"
+
+#: content.module:2377
+msgid "Taxonomy module form."
+msgstr "Taksonomiamoduulin syöttökaavake."
+
+#: content.module:2383
+msgid "Book"
+msgstr "Kirja"
+
+#: content.module:2384
+msgid "Book module form."
+msgstr "Kirjamoduulin syöttökaavake."
+
+#: content.module:2390
+msgid "Poll title"
+msgstr "Äänestyksen otsikko"
+
+#: content.module:2391
+msgid "Poll module title."
+msgstr "Äänestysmoduulin otsikko."
+
+#: content.module:2395
+msgid "Poll choices"
+msgstr "Äänestyksen vaihtoehdot"
+
+#: content.module:2396
+msgid "Poll module choices."
+msgstr "Äänestysmoduulin vaihtoehdot."
+
+#: content.module:2400
+msgid "Poll settings"
+msgstr "Äänestysasetukset"
+
+#: content.module:2401
+msgid "Poll module settings."
+msgstr "Äänestysmoduulin asetukset"
+
+#: content.module:2407
+msgid "File attachments"
+msgstr "Liitetiedostot"
+
+#: content.module:2408
+msgid "Upload module form."
+msgstr "Moduulin latauskaavake."
+
+#: content.module:595
+msgid "Updating field type %type with module %module."
+msgstr "Päivitetään kentän tyyppiä %type moduulilla %module."
+
+#: content.module:602
+msgid "Updating widget type %type with module %module."
+msgstr "Päivitetään widgettiä tyyppiä %type moduulilla %module."
+
+#: content.module:60
+msgid "Use PHP input for field settings (dangerous - grant with care)"
+msgstr "Käytä PHP:tä kentän asetuksissa (vaarallista - salli varoen)"
+
+#: content.module:79
+msgid "Fields"
+msgstr "Kentät"
+
+#: content.module:101
+msgid "Manage fields"
+msgstr "Hallitse kenttiä"
+
+#: content.module:110
+msgid "Display fields"
+msgstr "Näytä kentät"
+
+#: content.module:141
+msgid "Remove field"
+msgstr "Poista kenttä"
+
+#: content.install:236
+msgid "Updates for CCK-related modules are not run until the modules are enabled on the <a href=\"@admin-modules-path\">administer modules page</a>. When you enable them, you'll need to return to <a href=\"@update-php\">update.php</a> and run the remaining updates."
+msgstr "Päivityksiä CCK:hon liittyviin moduuleihin ei ajeta ennenkuin moduulit ovat aktivoituina <a href=\"@admin-modules-path\">moduulien ylläpitosivulla. Jos aktivoit ne, sinun pitää ajaa uudelleen <a href=\"@update-php\">update.php</a> suorittaaksesi loput päivitykset.</a>"
+
+#: content.install:239
+msgid "!module.module has updates but cannot be updated because content.module is not enabled.<br />If and when content.module is enabled, you will need to re-run the update script. You will continue to see this message until the module is enabled and updates are run."
+msgstr "!module.module on päivitettävissä mutta päivitystä ei voida ajaa koska content.module ei ole aktivoituna.<br />Jos ja kun moduuli on aktivoituna, sinun on ajettava uudelleen päivityskoodi. Näet tämän viestin niin kauan kuin moduuli ei ole aktivoituna ja päivitettynä."
+
+#: content.install:244
+msgid "!module.module has updates and is available in the modules folder but is not enabled.<br />If and when it is enabled, you will need to re-run the update script. You will continue to see this message until the module is enabled and updates are run."
+msgstr "!module.module on päivitettävissä moduulikansiossa mutta moduuli ei ole aktivoituna.<br />Jos ja kun moduuli on aktivoituna, sinun on ajettava uudelleen päivityskoodi. Näet tämän viestin niin kauan kuin moduuli ei ole aktivoituna ja päivitettynä."
+
+#: content.install:251
+msgid "Some updates are still pending. Please return to <a href=\"@update-php\">update.php</a> and run the remaining updates."
+msgstr "Jotkut päivityksistä ovat edelleen asentamatta. Palaa sivulle <a href=\"@update-php\"> ja suorita puuttuvat päivitykset."
+
+#: content.install:252
+msgid "Some updates are still pending.<br/>Please re-run the update script."
+msgstr "Jotkut päivityksistä ovat edelleen asentamatta.<br>Aja uudelleen päivityskoodi."
+
+#: (duplicate) content.install:10 
+msgid "CCK - No Views integration"
+msgstr "Ei Näkymintegraatiota tarjolla"
+
+#: (duplicate) content.install:11 
+msgid "CCK integration with Views module requires Views 6.x-2.0-rc2 or greater."
+msgstr "CCK kenttien integraatio Views moduuliin vaatii vähintään version Views 6.x-2.0-rc2."
+
+#: content.info:0 includes/content.rules.inc:19;212 includes/views/content.views.inc:180;261
+msgid "Content"
+msgstr "Sisältö"
+
+#: content.info:0
+msgid "Allows administrators to define new content types."
+msgstr "Sallii ylläpitäjien määrittää uusia sisältötyyppejä."
+
+#: content.info:0 modules/content_copy/content_copy.info:0 modules/content_permissions/content_permissions.info:0 modules/fieldgroup/fieldgroup.info:0 modules/nodereference/nodereference.info:0 modules/number/number.info:0 modules/optionwidgets/optionwidgets.info:0 modules/text/text.info:0 modules/userreference/userreference.info:0
+msgid "CCK"
+msgstr "CCK"
+

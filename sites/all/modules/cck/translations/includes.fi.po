@@ -1,0 +1,534 @@
+# $Id: includes.pot,v 1.1.2.13 2009/06/16 17:05:11 hass Exp $
+#
+# LANGUAGE translation of Drupal (includes)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  content.admin.inc,v 1.181.2.68 2009/06/02 14:49:07 yched
+#  content.rules.inc,v 1.1.2.6 2009/04/30 09:56:07 fago
+#  content.crud.inc,v 1.76.2.14 2008/11/07 15:02:02 yched
+#  content.node_form.inc,v 1.7.2.19 2009/06/02 20:18:27 yched
+#  content.token.inc,v 1.5.2.8 2008/12/05 14:59:22 yched
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-06-16 19:00+0200\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: includes/content.admin.inc:30
+msgid "edit"
+msgstr ""
+
+#: includes/content.admin.inc:33
+msgid "manage fields"
+msgstr ""
+
+#: includes/content.admin.inc:36
+msgid "delete"
+msgstr ""
+
+#: includes/content.admin.inc:47
+msgid "No content types available."
+msgstr ""
+
+#: includes/content.admin.inc:54
+msgid "Â» Add a new content type"
+msgstr "Â» Lisää uusi sisältötyyppi"
+
+#: includes/content.admin.inc:67;796;991
+msgid "Field name"
+msgstr "Kentän nimi"
+
+#: includes/content.admin.inc:67;811;997
+msgid "Field type"
+msgstr "Kentän tyyppi"
+
+#: includes/content.admin.inc:67
+msgid "Used in"
+msgstr "Käytetty"
+
+#: includes/content.admin.inc:71
+msgid "@field_name (Locked)"
+msgstr "@field_name (Lukittu)"
+
+#: includes/content.admin.inc:90
+msgid "No fields have been defined for any content type yet."
+msgstr "Millekään sisältötyypille ei ole vielä määritetty kenttiä."
+
+#: includes/content.admin.inc:106
+msgid "This content type has inactive fields. Inactive fields are not included in lists of available fields until their modules are enabled."
+msgstr "Tässä sisältötyypissä on ei-aktiivisia kenttiä. Ei-aktiivisia kenttiä ei näytetä tarjollaolevien kenttien listassa ennenkuin niiden moduulit on aktivoitu."
+
+#: includes/content.admin.inc:108
+msgid "!field (!field_name) is an inactive !field_type field that uses a !widget_type widget."
+msgstr "!field (!field_name) on ei-aktiivinen !field_type kenttä joka käyttää !widget_type widgettiä."
+
+#: includes/content.admin.inc:170;196
+msgid "Configure"
+msgstr "Konfiguroi"
+
+#: includes/content.admin.inc:181
+msgid "Locked"
+msgstr "Lukittu"
+
+#: includes/content.admin.inc:237
+msgid "- Select a field type -"
+msgstr "Valitse kentän tyyppi -"
+
+#: includes/content.admin.inc:238
+msgid "- Select a widget -"
+msgstr "Valitse widgetti -"
+
+#: includes/content.admin.inc:253
+msgid "Field name (a-z, 0-9, _)"
+msgstr "Kentän nimi (a-z, 0-9, _)"
+
+#: includes/content.admin.inc:258
+msgid "Type of data to store."
+msgstr "Tallennettavan tiedon tyyppi"
+
+#: includes/content.admin.inc:263;295
+msgid "Form element to edit the data."
+msgstr "Syöttökaavakkeen elementti datan muokkaamiseen."
+
+#: includes/content.admin.inc:279
+msgid "- Select an existing field -"
+msgstr "Valitse olemassaoleva kenttä -"
+
+#: includes/content.admin.inc:290
+msgid "Field to share"
+msgstr "Jaettava kenttä"
+
+#: includes/content.admin.inc:324
+msgid "Group name (a-z, 0-9, _)"
+msgstr "Ryhmän nimi (a-z, 0-9, _)"
+
+#: includes/content.admin.inc:373
+msgid "Add new field: you need to provide a label."
+msgstr "Lisää uusi kenttä: sinun on annettava otsikko"
+
+#: includes/content.admin.inc:378
+msgid "Add new field: you need to provide a field name."
+msgstr "Lisää uusi kenttä: sinun on määritettävä kentän nimi."
+
+#: includes/content.admin.inc:392
+msgid "Add new field: the field name %field_name is invalid. The name must include only lowercase unaccentuated letters, numbers, and underscores."
+msgstr "Lisää uusi kenttä: kentän nimi %field_name ei ole sallittu. Nimi saa sisältää ainoastaan pienaakkosten korottamattomia merkkejä (a-z), numeroita ja alaviivoja."
+
+#: includes/content.admin.inc:395
+msgid "Add new field: the field name %field_name is too long. The name is limited to 32 characters, including the 'field_' prefix."
+msgstr "Lisää uusi kenttä: kentän nimi %field_name on liian pitkä. Enimmäispituus on 32 merkkiä etuliite 'field_' mukaanlukien"
+
+#: includes/content.admin.inc:399
+msgid "Add new field: the name 'field_instance' is a reserved name."
+msgstr "Lisää uusi kenttä: nimi 'field_instance' on järjestelmän varaama nimi."
+
+#: includes/content.admin.inc:411
+msgid "Add new field: the field name %field_name already exists."
+msgstr "Lisää uusi kenttä: kenttä nimellä %field_name on jo olemassa."
+
+#: includes/content.admin.inc:417
+msgid "Add new field: you need to select a field type."
+msgstr "Lisää uusi kenttä: sinun on valittava kentän tyyppi."
+
+#: includes/content.admin.inc:422
+msgid "Add new field: you need to select a widget."
+msgstr "Lisää uusi kenttä: sinun on valittava widgetti."
+
+#: includes/content.admin.inc:428
+msgid "Add new field: invalid widget."
+msgstr "Lisää uusi kenttä: widgettiä ei löydy."
+
+#: includes/content.admin.inc:449
+msgid "Add existing field: you need to provide a label."
+msgstr "Lisää olemassoleva kenttä: sinun on määritettävä otsikko."
+
+#: includes/content.admin.inc:454
+msgid "Add existing field: you need to select a field."
+msgstr "Lisää olemassaoleva kenttä: sinun on valittava kenttä."
+
+#: includes/content.admin.inc:459
+msgid "Add existing field: you need to select a widget."
+msgstr "Lisää olemassaoleva kenttä: sinun on valittava widgetti."
+
+#: includes/content.admin.inc:465
+msgid "Add existing field: invalid widget."
+msgstr "Lisää olemassaoleva kenttä: widgettiä ei löydy."
+
+#: includes/content.admin.inc:514
+msgid "There was a problem creating field %label."
+msgstr "Ongelma luotaessa kenttää %label."
+
+#: includes/content.admin.inc:526
+msgid "The field %label cannot be added to a content type because it is locked."
+msgstr "Kenttää %label ei voida lisätä sisältötyyppiin koska se on lukittu."
+
+#: includes/content.admin.inc:536
+msgid "There was a problem adding field %label."
+msgstr "Ongelma lisättäessä kenttää %label."
+
+#: includes/content.admin.inc:578
+msgid "There are no fields configured for this content type. You can add new fields on the <a href=\"@link\">Manage fields</a> page."
+msgstr "Tälle sisältötyypille ei ole määritetty kenttiä. Voit lisätä uusia kenttiä <a href=\"@link\">Kenttienhallinta</a> sivulla."
+
+#: includes/content.admin.inc:625;668
+msgid "Include"
+msgstr "Sisällytä"
+
+#: includes/content.admin.inc:637
+msgid "no styling"
+msgstr "ei stylisointia"
+
+#: includes/content.admin.inc:638
+msgid "simple"
+msgstr "yksinkertainen"
+
+#: includes/content.admin.inc:639
+msgid "fieldset"
+msgstr "kenttäryhmä"
+
+#: includes/content.admin.inc:640
+msgid "fieldset - collapsible"
+msgstr "kenttäryhmä - pienennettävä"
+
+#: includes/content.admin.inc:641
+msgid "fieldset - collapsed"
+msgstr "kenttäryhmä - pienennetty"
+
+#: includes/content.admin.inc:697
+msgid "Your settings have been saved."
+msgstr "Asetuksesi on tallennettu."
+
+#: includes/content.admin.inc:767
+msgid "@type: @field (@label)"
+msgstr "@type: @field (@label)"
+
+#: includes/content.admin.inc:793
+msgid "Edit basic information"
+msgstr ""
+
+#: includes/content.admin.inc:799
+msgid "The machine-readable name of the field. This name cannot be changed."
+msgstr "Koneen luettavaksi tarkoitettu nimi kentälle. Nimeä ei voi muuttaa jälkikäteen."
+
+#: includes/content.admin.inc:807
+msgid "A human-readable name to be used as the label for this field in the %type content type."
+msgstr "Ihmisten luettavaksi tarkoitettu nimi kentälle sisältötyypissä %type."
+
+#: includes/content.admin.inc:814
+msgid "The type of data you would like to store in the database with this field. This option cannot be changed."
+msgstr "Haluamasi talletustyyppi kentän sisältämälle datalle. Tätä optiota ei voi muuttaa jälkikäteen."
+
+#: includes/content.admin.inc:819;1003
+msgid "Widget type"
+msgstr "Widgetin tyyppi"
+
+#: includes/content.admin.inc:823
+msgid "The type of form element you would like to present to the user when creating this field in the %type content type."
+msgstr "Haluamasi syöttökaavakkeen elementti jonka haluat tarjota käyttäjälle luotaessa tätä kenttää sisältötyypissä %type."
+
+#: includes/content.admin.inc:833 includes/content.rules.inc:66
+msgid "Continue"
+msgstr "Jatka"
+
+#: includes/content.admin.inc:861
+msgid "Updated basic settings for field %label."
+msgstr "Päivitetty perusasetukset kentälle %label."
+
+#: includes/content.admin.inc:865
+msgid "There was a problem updating the basic settings for field %label."
+msgstr "Ongelma päivitettäessä kentän %label perusasetuksia."
+
+#: includes/content.admin.inc:892
+msgid "Are you sure you want to remove the field %field?"
+msgstr "Oletko varma että haluat poistaa kentän %field?"
+
+#: includes/content.admin.inc:894
+msgid "If you have any content left in this field, it will be lost. This action cannot be undone."
+msgstr "Kentässä mahdollisesti oleva sisältö menetetään. Operaatiota ei voi perua."
+
+#: includes/content.admin.inc:901
+msgid "This field is <strong>locked</strong> and cannot be removed."
+msgstr "Kenttä on <strong>lukittu</strong> eikä sitä voi poistaa."
+
+#: includes/content.admin.inc:922
+msgid "Removed field %field from %type."
+msgstr "Poistettu kenttä %field sisältötyypistä %type."
+
+#: includes/content.admin.inc:927
+msgid "There was a problem deleting %field from %type."
+msgstr "Ongelma poistettaessa kenttä %field sisältötyypistä %type."
+
+#: includes/content.admin.inc:946
+msgid "The field %field is locked and cannot be edited."
+msgstr "Kenttä %field on lukittu eikä sitä voi muokata."
+
+#: includes/content.admin.inc:980
+msgid "%type basic information"
+msgstr "%typen perustiedot"
+
+#: includes/content.admin.inc:1010;1189
+msgid "Change basic information"
+msgstr "Muokkaa perustietoja"
+
+#: includes/content.admin.inc:1016
+msgid "%type settings"
+msgstr "%typen asetukset"
+
+#: includes/content.admin.inc:1017
+msgid "These settings apply only to the %field field as it appears in the %type content type."
+msgstr "Nämä asetukset tulevat voimaan ainoastaan kentälle %field sen esiintyessä sisältötyypissä %type."
+
+#: includes/content.admin.inc:1034
+msgid "Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags"
+msgstr "Täyttöohjeita kenttää täyttävälle käyttäjälle muokkauskaavakkeessa.<br /> Sallitut HTML tagit: @tags"
+
+#: includes/content.admin.inc:1060
+msgid "Default value"
+msgstr "Oletusarvo"
+
+#: includes/content.admin.inc:1090;1245 includes/content.rules.inc:93
+msgid "'@column' => value for @column"
+msgstr "'@column' => arvo sarakkeelle @column"
+
+#: includes/content.admin.inc:1092;1247 includes/content.rules.inc:95
+msgid "return array(\n  0 => array(@columns),\n  // You'll usually want to stop here. Provide more values\n  // if you want your 'default value' to be multi-valued:\n  1 => array(@columns),\n  2 => ...\n);"
+msgstr "palauttaa array(\n  0 => array(@columns),\n  // Haluat useimmiten lopettaa tässä kohtaa. Tarjoa lisää arvoja jos \n  // haluat 'oletusarvostasi' moniarvoisen:\n  1 => array(@columns),\n  2 => ...\n);"
+
+#: includes/content.admin.inc:1100
+msgid "Advanced usage only: PHP code that returns a default value. Should not include &lt;?php ?&gt; delimiters. If this field is filled out, the value returned by this code will override any value specified above. Expected format: <pre>!sample</pre>To figure out the expected format, you can use the <em>devel load</em> tab provided by <a href=\"@link_devel\">devel module</a> on a %type content page."
+msgstr "Ainoastaan edistyneempää käyttöä varten: PHP koodi joka palauttaa oletusarvon. Koodi ei saa sisältää tageja &lt;?php ?&gt;. Jos kenttä on täytetty, koodin palauttama arvo ohittaa kaikki yllämainituista arvoista. Oletettu muoto: <pre>!sample</pre>Mikäli sinulla on ongelmia määrittää oletettu muoto, voit käyttää <em>devel load</em> tabia joka tulee <a href=\"@link_devel\">devel moduulin</a> mukana. Linkki löytyy jokaisen sisältötyypin asetussivulta."
+
+#: includes/content.admin.inc:1111
+msgid "This PHP code was set by an administrator and will override any value specified above."
+msgstr "Tämä PHP koodi on ylläpitäjän asettama ja ohittaa kaikki yllämainitut arvot"
+
+#: includes/content.admin.inc:1118
+msgid "Global settings"
+msgstr "Globaalit asetukset"
+
+#: includes/content.admin.inc:1119
+msgid "These settings apply to the %field field in every content type in which it appears."
+msgstr "Nämä asetukset tulevat voimaan ainoastaan kentälle %field kaikissa sisältötyypeissä joissa se esiintyy."
+
+#: includes/content.admin.inc:1123
+msgid "Required"
+msgstr "Pakollinen"
+
+#: includes/content.admin.inc:1126
+msgid "Maximum number of values users can enter for this field."
+msgstr "Syötettävien arvojen enimmäismäärä."
+
+#: includes/content.admin.inc:1128
+msgid "'Unlimited' will provide an 'Add more' button so the users can add as many values as they like."
+msgstr "'Rajoitamaton' tarjoaa 'Lisää...' napin jotta käyttäjäy voivat lisätä niin monta arvoa kuin haluavat."
+
+#: includes/content.admin.inc:1130
+msgid "Warning! Changing this setting after data has been created could result in the loss of data!"
+msgstr "Varoitus! Tämän arvon muuttaminen kun tietoa on jo syötetty voi aiheuttaa tiedon menetyksen!"
+
+#: includes/content.admin.inc:1133
+msgid "Number of values"
+msgstr "Arvojen määrä"
+
+#: includes/content.admin.inc:1249
+msgid "The default value PHP code returned an incorrect value.<br/>Expected format: <pre>!sample</pre> Returned value: @value"
+msgstr "PHP-koodin palauttama oletusarvo oli väärä.<br />Oletettu muoto: <pre>!sample</pre> Palautettu arvo: @value"
+
+#: includes/content.admin.inc:1288
+msgid "The PHP code for 'default value' returned @value, which is invalid."
+msgstr "PHP-koodi 'oletusaarvolle' palautti @value joka ei ole sallittu."
+
+#: includes/content.admin.inc:1292
+msgid "The default value is invalid."
+msgstr "Oletusarvo ei ole sallittu."
+
+#: includes/content.admin.inc:1316
+msgid "Added field %label."
+msgstr "Lisätty kenttä %label."
+
+#: includes/content.admin.inc:1320
+msgid "Saved field %label."
+msgstr "Tallennettu kenttä %label."
+
+#: includes/content.admin.inc:1678
+msgid "Processing"
+msgstr "Prosessoidaan"
+
+#: includes/content.admin.inc:1679
+msgid "The update has encountered an error."
+msgstr "Ongelma päivityksessä."
+
+#: includes/content.admin.inc:1693
+msgid "The database has been altered and data has been migrated or deleted."
+msgstr "Tietokanta on muuttunut ja tieto on joko siirtynyt tai deletoitunut."
+
+#: includes/content.admin.inc:1696
+msgid "An error occurred and database alteration did not complete."
+msgstr "Havaittu ongelma, tietokannan muutokset ei valmistuneet."
+
+#: includes/content.admin.inc:1799
+msgid "Processing %title"
+msgstr "Prosessoidaan %title"
+
+#: includes/content.admin.inc:1865
+msgid "%name must be an integer."
+msgstr "%namen on oltava muuttuja."
+
+#: includes/content.admin.inc:1875
+msgid "%name must be a positive integer."
+msgstr ""
+
+#: includes/content.admin.inc:1885
+msgid "%name must be a number."
+msgstr "%namen on oltava numero."
+
+#: includes/content.admin.inc:1697
+msgid "1 item successfully processed:"
+msgid_plural "@count items successfully processed:"
+msgstr[0] "1 esine onnistuneesti prosessoitu:"
+msgstr[1] "@count esinettä onnistuneesti prosessoitu:"
+
+#: includes/content.crud.inc:589
+msgid "Content fields table %old_name has been renamed to %new_name and field instances have been updated."
+msgstr "Sisältötyyppitaulu %old_name on uudelleen nimetty %new_name ja kenttien instanssit on päivitetty."
+
+#: includes/content.crud.inc:633
+msgid "The content fields table %name has been deleted."
+msgstr "Sisältökentät taulussa %name on poistettu."
+
+#: includes/content.node_form.inc:223
+msgid "Add another item"
+msgstr "Lisää uusi esine"
+
+#: includes/content.rules.inc:15
+msgid "Populate a field"
+msgstr "Päivitä kenttä"
+
+#: includes/content.rules.inc:23;224
+msgid "You should make sure that the used field exists in the given content type."
+msgstr "Sinun on syytä varmistaa että valittu kenttä on tarjolla annetussa sisältötyypissä."
+
+#: includes/content.rules.inc:56
+msgid "Select the machine-name of the field."
+msgstr "Valitse kentän koneluettava nimi."
+
+#: includes/content.rules.inc:84
+msgid "Advanced: Specify the fields value with PHP code"
+msgstr "Ainoastaan edistyneempää käyttöä varten: Määritä kentän arvot PHP koodilla"
+
+#: includes/content.rules.inc:102
+msgid "Advanced usage only: PHP code that returns the value to set. Should not include &lt;?php ?&gt; delimiters. If this field is filled out, the value returned by this code will override any value specified above. Expected format: <pre>!sample</pre>Using <a href=\"@link_devel\">devel.module's</a> 'devel load' tab on a content page might help you figure out the expected format."
+msgstr "Ainoastaan edistyneempää käyttöä varten: PHP koodi joka palauttaa oletusarvon. Koodi ei saa sisältää tageja &lt;?php ?&gt;. Jos kenttä on täytetty, koodin palauttama arvo ohittaa kaikki yllämainituista arvoista. Oletettu muoto: <pre>!sample</pre>Mikäli sinulla on ongelmia määrittää oletettu muoto, voit käyttää <em>devel load</em> tabia joka tulee <a href=\"@link_devel\">devel moduulin</a> mukana. Linkki löytyy jokaisen sisältötyypin asetussivulta."
+
+#: includes/content.rules.inc:130
+msgid "You have to return the default value in the expected format."
+msgstr "Sinun on palautettava oletusarvo odotetussa muodossa."
+
+#: includes/content.rules.inc:193
+msgid "Populate @node's field '@field'"
+msgstr "Päivitä @noden kenttä '@field'"
+
+#: includes/content.rules.inc:210
+msgid "Field has value"
+msgstr "Kentällä on arvo"
+
+#: includes/content.rules.inc:215
+msgid "You should make sure that the used field exists in the given content type. The condition returns TRUE, if the selected field has the given value."
+msgstr "Sinun tulee varmistaa että käytettävä kenttä on olemassa määrittämässäsi sisältötyypissä. Ehto palauttaa TRUE jos valitulla kentällä on annettu arvo."
+
+#: includes/content.rules.inc:219
+msgid "Field has changed"
+msgstr "Kenttä on muutettu"
+
+#: includes/content.rules.inc:221
+msgid "Content containing changes"
+msgstr "Muokattu sisältö"
+
+#: includes/content.rules.inc:222
+msgid "Content not containing changes"
+msgstr "Muokkaamaton sisältö"
+
+#: includes/content.rules.inc:259
+msgid "@node's field '@field' has value"
+msgstr "@noden kentällä '@field' on arvo"
+
+#: includes/content.rules.inc:279
+msgid "Select the machine-name of the field to look at."
+msgstr "Valitse koneen luettavaksi tarkoitettu nimi kentälle."
+
+#: includes/content.rules.inc:285
+msgid "@node's field '@field' has been changed"
+msgstr "@noden kenttä '@field' on muutettu"
+
+#: includes/content.token.inc:12;15
+msgid "Token"
+msgstr "Merkki"
+
+#: includes/content.token.inc:81
+msgid "Referenced node ID"
+msgstr "Viitatun solmun ID"
+
+#: includes/content.token.inc:82
+msgid "Referenced node title"
+msgstr "Viitatun solmun otsikko"
+
+#: includes/content.token.inc:83
+msgid "Referenced node unfiltered title. WARNING - raw user input."
+msgstr "Viitatun solmun suodattamaton otsikko, VAROITUS - raakasyöte."
+
+#: includes/content.token.inc:84
+msgid "Formatted html link to the referenced node."
+msgstr "Formatoitu HTML linkki viitattuun solmuun."
+
+#: includes/content.token.inc:85
+msgid "Relative path alias to the referenced node."
+msgstr "Relatiivinen polku viitattuun solmuun."
+
+#: includes/content.token.inc:86
+msgid "Absolute path alias to the referenced node."
+msgstr "Absoluuttinen polku viitattuun solmuun."
+
+#: includes/content.token.inc:114
+msgid "Raw number value"
+msgstr "Raaka lukuarvo"
+
+#: includes/content.token.inc:115
+msgid "Formatted number value"
+msgstr "Formatoitu lukuarvo"
+
+#: includes/content.token.inc:138
+msgid "Raw, unfiltered text"
+msgstr "Raaka suodattamaton teksti"
+
+#: includes/content.token.inc:139
+msgid "Formatted and filtered text"
+msgstr "Formatoitu ja suodatettu teksti"
+
+#: includes/content.token.inc:161
+msgid "Referenced user ID"
+msgstr "Viitatun käyttäjän ID"
+
+#: includes/content.token.inc:162
+msgid "Referenced user name"
+msgstr "Viitatun käyttäjän nimi"
+
+#: includes/content.token.inc:163
+msgid "Formatted HTML link to referenced user"
+msgstr "Formatoitu HTML linkki viitattuun käyttäjään"
+
+#: includes/content.token.inc:164
+msgid "Relative path alias to the referenced user."
+msgstr "Relatiivinen polku viitattuun käyttäjään."
+
+#: includes/content.token.inc:165
+msgid "Absolute path alias to the referenced user."
+msgstr "Absoluuttise4n polun alias viitattuun käyttäjään."
+

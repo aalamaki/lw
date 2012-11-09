@@ -1,0 +1,163 @@
+<?php
+// $Id: flexifilter.install,v 1.6.2.3.4.6 2008/06/25 03:04:15 dmitrig01 Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function flexifilter_install() {
+  drupal_install_schema('flexifilter');
+  require_once drupal_get_path('module', 'flexifilter') .'/flexifilter.module';
+  flexifilter_flexifilter_install('flexifilter');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function flexifilter_uninstall() {
+  drupal_uninstall_schema('flexifilter');
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function flexifilter_schema() {
+  $schema = array();
+
+  $schema['flexifilters'] = array(
+    'description' => t('Holds definitions for flexifilters.'),
+    'fields' => array(
+      'fid' => array(
+        'description' => t('The primary identifier for a flexifilter.'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'label' => array(
+        'type' => 'varchar',
+        'length' => 127,
+        'not null' => TRUE,
+        'description' => t('Flexifilter human-readable name.'),
+      ),
+      'description' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => t('Flexifilter filter tips.'),
+      ),
+      'delta' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'description' => t('Used to map Flexifilters to filters.'),
+      ),
+      'cache' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('1 if the flexifilter has caching enabled, 0 otherwise. Used for dynamic filters.'),
+      ),
+    ),
+    'primary key' => array('fid'),
+    'indexes' => array(
+      'delta' => array('delta'),
+    ),
+  );
+
+  $schema['flexifilters_parts'] = array(
+    'description' => t('Holds definitions for individual flexifilter parts (components and conditions).'),
+    'fields' => array(
+      'pid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'disp-width' => '10',
+        'description' => t('Primary identifier for a flexifilter part.'),
+      ),
+      'fid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => t('ID of the flexifilter containing this part.'),
+      ),
+      'parent' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => t('ID of the flexifilter part that directly contains this part.'),
+      ),
+      'type' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'description' => t('Type number of this part (component / condition / root)'),
+      ),
+      'class_name' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        'description' => t('Class name of the component / condition'),
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('The weight of the flexifilter part, used for ordering.'),
+      ),
+      'settings' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => TRUE,
+        'description' => t('Serialized array of any settings that have been set for this part'),
+      ),
+    ),
+    'primary key' => array('pid'),
+    'indexes' => array(
+      'fid' => array('fid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Update function: add the 'cache' field to the {flexifilters} table.
+ */
+function flexifilter_update_6100() {
+  $ret = array();
+  db_add_field($ret, 'flexifilters', 'cache', array('type' => 'int', 'unsigned' => TRUE, 'size' => 'tiny', 'not null' => TRUE, 'default' => 0, 'initial' => 1));
+  return $ret;
+}
+
+/**
+ * Update function: remove the 'pid_root' column.
+ */
+function flexifilter_update_6200() {
+  $ret = array();
+  db_drop_field($ret, 'flexifilters', 'pid_root');
+  return $ret;
+}
+
+/**
+ * Update function: add the 'weight' column.
+ */
+function flexifilter_update_6201() {
+  $ret = array();
+  db_add_field($ret, 'flexifilters_parts', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny', 'initial' => 0));
+  return $ret;
+}
+
+/**
+ * Update function: drop the 'advanced', 'enabled', and 'parent' columns from
+ * the {flexifilters} table.
+ */
+function flexifilter_update_6202() {
+  $ret = array();
+  db_drop_field($ret, 'flexifilters', 'advanced');
+  db_drop_field($ret, 'flexifilters', 'enabled');
+  db_drop_field($ret, 'flexifilters', 'parent');
+  return $ret;
+}

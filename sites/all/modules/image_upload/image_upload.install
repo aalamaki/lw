@@ -1,0 +1,105 @@
+<?php
+// $Id: image_upload.install,v 1.1.2.1 2008/10/17 19:30:41 bojanz Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function image_upload_install() {
+   drupal_install_schema('image_upload');
+
+   // Create the vocabulary used for image categories, and a default term.
+   $vocabulary = array(
+    'name' => 'Image Upload',
+    'description' => 'The terms from this vocabulary are used as image upload categories,
+                      where each category is a separate container for uploaded images.',
+    'relations' => '1',
+    'hierarchy' => '1',
+    'module' => 'taxonomy',
+   );
+
+   taxonomy_save_vocabulary($vocabulary);
+
+   $term = array(
+    'vid' => $vocabulary['vid'],
+    'name' => 'Default',
+   );
+
+   taxonomy_save_term($term);
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function image_upload_uninstall() {
+  // Remove tables.
+  drupal_uninstall_schema('image_upload');
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function image_upload_schema() {
+  $schema['image_upload'] = array(
+    'description' => t('Stores uploaded file information and table associations.'),
+    'fields' => array(
+      'fid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Primary Key: The {files}.fid.'),
+      ),
+      'thumbpath' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => t('Path to the thumbnail file.'),
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {node}.nid associated with the uploaded file.'),
+      ),
+      'vid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Primary Key: The {node}.vid associated with the uploaded file.'),
+      ),
+      'tid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('Term id, the category of the uploaded file.'),
+      ),
+      'description' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Description of the uploaded file.'),
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('Weight of this upload in relation to other uploads in this node.'),
+      ),
+    ),
+    'primary key' => array('vid', 'fid'),
+    'indexes' => array(
+      'fid' => array('fid'),
+      'nid' => array('nid'),
+      'tid' => array('tid'),
+    ),
+  );
+
+  return $schema;
+}

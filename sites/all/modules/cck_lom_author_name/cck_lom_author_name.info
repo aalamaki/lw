@@ -1,0 +1,16 @@
+; $Id: cck_lom_author_name.info,v 1.1.2.6 2007/12/14 20:27:36 rconstantine Exp $
+;/**
+; * @package CCK_Fullname
+; * @category NeighborForge
+; */
+name = LOM Author Name Field
+description = Defines fullname field so first, middle and last names are treated as a single unit.
+core = 6.x
+dependencies[] = content
+package = CCK
+; Information added by drupal.org packaging script on 2009-05-02
+version = "6.x-1.x-dev"
+core = "6.x"
+project = "cck_lom_author_name"
+datestamp = "1241222716"
+

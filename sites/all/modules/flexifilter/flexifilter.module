@@ -1,0 +1,453 @@
+<?php
+// $Id: flexifilter.module,v 1.16.2.6.2.17 2008/06/22 06:50:48 cwgordon7 Exp $
+
+/*
+$path = drupal_get_path('module', 'flexifilter');
+include_once ($path .'/flexifilter.components.inc');
+include_once ($path .'/flexifilter.conditions.inc');
+*/
+
+define('FLEXIFILTER_COMPONENT', 'component');
+define('FLEXIFILTER_CONDITION', 'condition');
+
+/**
+ * Load a flexifilter object.
+ *
+ * @param $fid
+ *   The ID of the flexifilter to load.
+ * @param $delta
+ *   The filter delta to load.
+ * @param $refresh
+ *   If TRUE, refreshes the static cache. Defaults to FALSE.
+ * @return
+ *   The flexifilter upon success; FALSE upon failure.
+ */
+function flexifilter_flexifilter_load($fid = NULL, $delta = NULL, $refresh = FALSE) {
+  // We keep the flexifilters, as well as a map of the filter deltas to flexifilter ids,
+  // in static variables.
+  static $flexifilters = array(), $delta_map = array();
+  if ($refresh) {
+    $flexifilters = $delta_map = array();
+  }
+  // Both of them can't be NULL, we need some way to find which filter.
+  if (is_null($fid) && is_null($delta)) {
+    return;
+  }
+
+  // If this filter isn't in the static cache already, load it.
+  if ((!is_null($fid) && !isset($flexifilters[$fid])) || (!is_null($delta) && !isset($delta_fid[$delta]))) {
+    if (!is_null($fid)) {
+      $query_field = 'fid';
+    }
+    else {
+      $query_field = 'delta';
+    }
+
+    $query = db_query("SELECT * FROM {flexifilters} f LEFT JOIN {flexifilters_parts} fp ON f.fid = fp.fid WHERE f.$query_field = %d ORDER BY fp.weight DESC", $$query_field);
+
+    $map = array();
+    $flexifilter = array();
+    while ($row = db_fetch_array($result)) {
+      if (isset($row['delta'])) {
+        // Add base information about the flexifilter.
+        $flexifilter = array(
+          'fid' => $row['fid'],
+          'label' => $row['label'],
+          'description' => $row['description'],
+          'enabled' => $row['enabled'],
+          'delta' => $row['delta'],
+          'advanced' => $row['advanced'],
+          'cache' => $row['cache'],
+        );
+      }
+      if (isset($row['pid'])) {
+        // Add information about a specific flexifilter component or condition.
+        $parts[$row['pid']] = array(
+          'pid' => $row['pid'],
+          'fid' => $row['fid'],
+          'parent_pid' => $row['parent_pid'],
+          'type' => $row['type'],
+          'class_name' => $row['class_name'],
+          'weight' => $row['weight'],
+          'settings' => unserialize($row['settings']),
+        );
+        if (empty($row['parent_pid'])) {
+          $flexifilter['components'][$row['pid']] = $parts[$row['pid']];
+        }
+        else {
+          // Keep track of which flexifilter parts are children of which other
+          // flexifilter parts so we'll be able to do awesome stuff with them.
+          $map[$row['parent_pid']][$row['pid']] = $row['pid'];
+        }
+      }
+      // Nest the flexifilter parts to the appropriate places in the hierarchy.
+      _flexifilter_map_parts($flexifilter['components'], $parts, $map);
+    }
+    if (!empty($flexifilter['delta'])) {
+      $delta_map[$flexifilter['delta']] = $flexifilter['fid'];
+    }
+  }
+  return is_null($fid) ? $flexifilters[$delta_map[$delta]] : $flexifilters[$fid];
+}
+
+/**
+ * Helper function for flexifilter_flexifilter_load().
+ *
+ * @param $components
+ *   An array of components to map parts to.
+ * @param $parts
+ *   An array of parts to map to components.
+ * @param $map
+ *   An array that describes the hierarchical structure of flexifilter parts.
+ * @return
+ *   None, $components is modified by reference.
+ */
+function _flexifilter_map_parts(&$components, $parts, $map) {
+  foreach ($components as $pid => $component) {
+    if (!isset($map[$pid])) {
+      // This particular part has no sub-parts.
+      continue;
+    }
+    foreach ($map[$pid] as $child) {
+      // Determine where to place the child component/condition.
+      $position = $parts[$child]['type'] == FLEXIFILTER_COMPONENT ? 'components' : 'conditions';
+      $components[$pid][$position][$child] = $parts[$child];
+    }
+    // Continue to nest components and conditions.
+    foreach (array('components', 'conditions') as $position) {
+      if (isset($components[$pid][$position])) {
+        _flexifilter_map_parts($components[$pid][$position], $parts, $map);
+      }
+    }
+  }
+}
+
+/**
+ * Saves a flexifilter to the database.
+ *
+ * @param $filter
+ *   A flexifilter to save.
+ * @return
+ *   The fid.
+ */
+function flexifilter_flexifilter_save($filter) {
+  $components = $filter['components'];
+  unset($filter['components']);
+  drupal_write_record('flexifilter', $filter, (!isset($filter['fid']) || $filter['fid'] == 'new'? array() : 'fid'));
+
+  return $filter['fid'];
+}
+
+/**
+ * Deletes a given flexifilter based on its fid.
+ *
+ * @param $fid
+ *   The flexifilter id of the flexifilter to obliterate.
+ * @return
+ *   None.
+ */
+function flexifilter_flexifilter_delete($flexifilter) {
+  db_query("DELETE FROM {filters} WHERE module = 'flexifilter' AND delta = %d", $flexifilter['delta']);
+  cache_clear_all('*', 'cache_filter', TRUE);
+
+  db_query('DELETE FROM {flexifilters_parts} WHERE fid = %d', $flexifilter['fid']);
+  db_query('DELETE FROM {flexifilters} WHERE fid = %d', $flexifilter['fid']);
+}
+
+/**
+ * Returns a list of all flexifilters
+ */
+function flexifilter_flexifilter_list($include_components = TRUE, $reset = FALSE) {
+  static $cache = array();
+  // Todo: write this.
+  return array();
+}
+
+function flexifilter_flexifilter_install($module, $flexifilters = NULL) {
+  if (is_null($flexifilters)) {
+    $file = drupal_get_path('module', $module) ."/$module.flexifilters.inc";
+    if (file_exists($file)) {
+      require_once $file;
+    }
+    $flexifilters = module_invoke($module, 'flexifilters');
+  }
+  $fids = array();
+  foreach ($flexifilters as $flexifilter) {
+    $fid = flexifilter_flexifilter_save($flexifilter);
+  }
+  return $fids;
+}
+
+/**
+ * Get info about a particular flexifilter condition based on its class.
+ *
+ * @param $class
+ *   The class of the flexifilter condition.
+ * @return
+ *   An array of information about the condition.
+ */
+function flexifilter_condition_info($class) {
+  return _flexifilter_part_info($class, FLEXIFILTER_CONDITION);
+}
+
+/**
+ * Get a list of available conditions.
+ */
+function flexifilter_condition_list() {
+  return _flexifilter_part_list(FLEXIFILTER_CONDITION);
+}
+
+/**
+ * Get info about a particular flexifilter component based on its class.
+ *
+ * @param $class
+ *   The class of the flexifilter component.
+ * @return
+ *   An array of information about the component.
+ */
+function flexifilter_component_info($class) {
+  return _flexifilter_part_info($class, FLEXIFILTER_COMPONENT);
+}
+
+/**
+ * Get a list of available components.
+ */
+function flexifilter_component_list() {
+  return _flexifilter_part_list(FLEXIFILTER_COMPONENT);
+}
+
+/**
+ * Get info about a particular flexifilter part based on its class.
+ *
+ * @param $class
+ *   The class of the flexifilter part.
+ * @param $type
+ *   The type of flexifilter part it is.
+ * @return
+ *   An array of information about it.
+ */
+function _flexifilter_part_info($class, $type) {
+  switch ($type) {
+    case FLEXIFILTER_COMPONENT:
+      $list = flexifilter_component_list();
+      return $list[$class];
+
+    case FLEXIFILTER_CONDITION:
+      $list = flexifilter_condition_list();
+      return $list[$class];
+  }
+  return FALSE;
+}
+
+/**
+ * An API function that gets a list of all the flexifilter components present.
+ *
+ * @param $reset
+ *   Set to TRUE to clear the cache (cache is per-page-request)
+ * @return
+ *   An array containing the components. Each component will be a key/value pair in
+ *   this array. The key is a unique identifier of the component, also called the component
+ *   class.
+ */
+function _flexifilter_part_list($type, $reset = FALSE) {
+  static $components;
+  if (!isset($components[$type]) || $reset) {
+    $module_components = module_invoke_all('flexifilter_'. $type);
+    foreach ($module_components as $key => $component) {
+      $components[$type][$key] = $component + array(
+        'group' => t('Other'),
+        'description' => '',
+        'callback_arguments' => array(),
+        'contains_conditions' => FALSE,
+        'contains_components' => FALSE,
+      );
+    }
+  }
+  return $components[$type];
+}
+
+function flexifilter_component_save($component, $fid) {
+  
+}
+
+
+/**
+ * Causes a series of components to run
+ *
+ * @param $components An array containing components. Each value in this array must be an array with the following keys:
+ *  - class : The name of a component class (i.e. one of the keys in the flexifilter_component_list() array)
+ *  - step : If the component can run in either step, should contain "prepare" or "process". Ignored if the component runs in a set step.
+ *  - settings : An array of settings for the component, suitable for passing to flexifilter_component_invoke()
+ * @param $op The operation to perform on the components. Should be "prepare" or "process".
+ * @param $text The text to prepare or process
+ *
+ * @return The new text, after preparation / processing
+ */
+function flexifilter_components_invoke($components, $op, $text) {
+  $component_list = flexifilter_component_list();
+  foreach ($components as $key => $component) {
+    $class = $component_list[$component['class']];
+    if ($class['step'] == 'both' || $component['settings']['step'] == $op || $class['step'] == $op) {
+      $text = flexifilter_component_invoke($class, $op, $component['settings'], $text);
+    }
+  }
+  return $text;
+}
+
+/**
+ * Causes a component to run
+ *
+ * @param $component A component (e.g. from flexifilter_component_list())
+ * @param $op The operation to run on the component. "settings", "prepare" and "process" are valid operations.
+ * @param $settings The values from the component's settings form (can be an empty array for "settings" operation)
+ * @param $text The text to run the component over (ignored for "settings" operation)
+ *
+ * @return "prepare" and "process" operations return the new text, "settings" returns an FAPI table. For any
+ * operations that the component doesn't support, it will return $text.
+ */
+function flexifilter_component_invoke($component, $op, $settings = array(), $text = '') {
+  $text = call_user_func_array($component['callback'], array_merge($component['callback_arguments'], array($op, $settings, $text)));
+  return $text;
+}
+
+/**
+ * API function that returns TRUE if the components are involved in the step.
+ *
+ * @param $components
+ *   An array of components to check for involvement.
+ * @param $step
+ *   The step to check for involvement, either 'process' or 'prepare'.
+ */
+function flexifilter_components_involve_step($components, $step) {
+  $component_list = flexifilter_component_list();
+  foreach ($components as $key => $component) {
+    $class = $component_list[$component['class']];
+    // If step is explicity set to the one being tested, then it is involved
+    if ((isset($component['step']) && $component['step'] == $step) || $class['step'] == $step) {
+      return TRUE;
+    }
+    // If step is set to both, then it is involved (unless it is a container)
+    if ($class['is_container'] !== TRUE && $class['step'] == 'both') {
+      return TRUE;
+    }
+    // Finally, if one of its children is involed, then it is
+    if (isset($component['components']) && flexifilter_components_involve_step($component['components'], $step)) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Runs a condition.
+ *
+ * @param $data Array containing condition data. Should have at least two keys:
+ *  - class : The class name of the component
+ *  - settings : Array of settings to pass to the component
+ * @param $op The operation to run on the condition. "settings", "prepare" and "process" are valid operations.
+ * @param $text The text to run the condition over (ignored for "settings" operation)
+ *
+ * @return "prepare" and "process" operations return either TRUE or FALSE, "settings" returns an FAPI table
+ */
+function flexifilter_condition_invoke($data, $op, $text = '') {
+  // Blank class name is the faux condition "No Condition"
+  if ($data['class'] === '') {
+    if ($op == 'settings') {
+      return array();
+    }
+    else {
+      return FALSE;
+    }
+  }
+
+  // Anything else is a proper condition, so dispatch it
+  $conditions   = flexifilter_condition_list();
+  $condition    = $conditions[$data['class']];
+  $settings     = $data['settings'];
+  $return_value = call_user_func_array($condition['callback'], array_merge($condition['callback_arguments'], array($op, $settings, $text)));
+
+  switch ($op) {
+    // For settings, return the value as-is
+
+    case 'settings':
+      return $return_value;
+
+    // For prepare and process, force the return value to TRUE or FALSE
+    case 'prepare':
+    case 'process':
+      return (bool)$return_value;
+  }
+}
+
+/**
+ * Implementation of hook_filter
+ *
+ * Maps flexifilters into the existing filters system. Currently maps $delta to the
+ * flexifilter ID. This will have to change, as the filter system stores delta as a
+ * tinyint, and flexifilter IDs might exceed 127. Possible solutions:
+ *  - Limit the number of enabled flexifilters to 128 at any one time (and unlimited disabled ones)
+ *  - Expose a single "Flexifilter" filter, and allow it to be configured, setting which flexifilters to use
+ */
+function flexifilter_filter($op, $delta = 0, $format = -1, $text = '') {
+  switch ($op) {
+    case 'list':
+      $filters = array();
+      foreach (flexifilter_flexifilter_list(FALSE) as $fid => $filter) {
+        if ($filter['enabled']) {
+          $filters[$filter['delta']] = $filter['label'];
+        }
+      }
+      return $filters;
+
+    case 'description':
+      $filter = flexifilter_flexifilter_load(NULL, $delta, $reset);
+      return $filter['description'];
+
+    case 'prepare':
+    case 'process':
+      $filter = flexifilter_flexifilter_load(NULL, $delta, $reset);
+
+      return flexifilter_components_invoke($filter['components'], $op, $text);
+
+    case 'no cache':
+      $filter = flexifilter_flexifilter_load(NULL, $delta, $reset);
+      return !($filter['cache']);
+
+    default:
+      return $text;
+  }
+}
+
+/**
+ * Implementation of hook_filter_tips.
+ */
+function flexifilter_filter_tips($delta, $format, $long = FALSE) {
+  $flexifilter = flexifilter_get_filter_by_delta($delta);
+  if ($long) {
+    return str_replace('<!--break-->', '', $flexifilter['description']);
+  }
+  else {
+    $pos = strpos($flexifilter['description'], '<!--break-->');
+    if ($pos === FALSE) {
+      return $flexifilter['description'];
+    }
+	  return substr($flexifilter['description'], 0, $pos);
+  }
+}
+
+/**
+ * Returns the next available flexifilter filter delta, or FALSE if no further
+ * deltas are available.
+ */
+function flexifilter_get_unused_delta() {
+  $deltas = array();
+  foreach (flexifilter_flexifilter_list(FALSE) as $flexifilter) {
+    $deltas[$flexifilter['delta']] = TRUE;
+  }
+  for ($i = 0; $i < FLEXIFILTER_MAX_FILTERS; $i++) {
+    if (!isset($deltas[$i])) {
+      return $i;
+    }
+  }
+  return FALSE;
+}

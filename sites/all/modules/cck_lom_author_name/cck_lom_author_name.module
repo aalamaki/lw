@@ -1,0 +1,1143 @@
+<?php
+/**
+ * This is the cck_lom_author_name module for use with CCK.
+ * 
+ * <p>This file contains information on the cck_lom_author_name module. The module adds to
+ * the field types available for inclusion in a content type definition. This field
+ * is made up of five standard html form text fields - prefix, Name name, Organization,
+ * Email, and suffix - times two; one set for Author names and one for preferred.
+ * See the README for more details.</p>
+ * TODO it looks like the stars for the required fields might not work on small screens so
+ * instead, maybe use outlines - yellow for required on required fields, blue for required
+ * on optional field?
+ *  
+ * @version $Id: cck_lom_author_name.module,v 1.1.2.8 2007/12/17 20:30:55 rconstantine Exp $;
+ * @package cck_lom_author_name
+ * @category NeighborForge
+ * @author Ryan Constantine
+ * @filesource
+ * @license http://www.gnu.org/licenses/gpl.txt GNU_GENERAL_PUBLIC_LICENSE
+ * @link none yet
+ */
+
+
+//-----------------------------------------CCK hooks--------------------------------------------------
+//-----------------------------------------CCK hooks--------------------------------------------------
+//-----------------------------------------CCK hooks--------------------------------------------------
+ 
+/**
+ * Implementation of hook_field_info().
+ * 
+ * @return
+ *   An array keyed by field type name. Each element of the array is an associative
+ *   array with these keys and values:
+ *   - "label": The human-readable label for the field type.
+ */
+function cck_lom_author_name_field_info() {
+  return array(
+    'cck_lom_author_name' => array('label' => 'LOM Author Name'),
+  );
+} // function cck_lom_author_name_field_info()
+
+/**
+ * Implementation of hook_field_settings().
+ * 
+ * @param $op
+ *   The operation to be performed.
+ * @param $field
+ *   The field on which the operation is to be performed.
+ * @return
+ *   This varies depending on the operation.
+ *   - "form": an array of form elements to add to
+ *     the settings page.
+ *   - "validate": no return value. Use form_set_error().
+ *   - "save": an array of names of form elements to
+ *     be saved in the database.
+ *   - "database columns": an array keyed by column name, with arrays of column 
+ *     information as values.
+ *   - "filters": an array whose values are 'filters'
+ *     definitions as expected by views.module (see Views Documentation).
+ *   - "callbacks": an array describing the field's behaviour regarding hook_field 
+ *     operations. The array is keyed by hook_field operations ('view', 'validate'...)
+ *     and has the following possible values : 
+ *       CONTENT_CALLBACK_NONE     : do nothing for this operation 
+ *       CONTENT_CALLBACK_CUSTOM   : use the behaviour in hook_field(operation)
+ *       CONTENT_CALLBACK_DEFAULT  : use content.module's default bahaviour
+ *     Note : currently only the 'view' operation implements this feature. 
+ *     All other field operation implemented by the module _will_ be executed 
+ *     no matter what.
+ */
+function cck_lom_author_name_field_settings($op, $field) {
+  switch ($op) {
+    case 'form':
+      $form = array();
+      
+      //borrowed from namefield module
+      //----------allow content type creator to determine which fields are required-----------
+      $required_default = array();
+      if (is_array($field['required_parts'])) {
+        foreach ($field['required_parts'] as $part => $required) {
+          if ($required) { $required_default[] = $part; }
+        } // foreach possibly-required part
+      } else {
+        $required_default = array('legal_Name', 'legal_Email');
+      } // if we can make up our own defaults
+        
+      $form['required'] = array(
+        '#type' => 'fieldset',
+        '#weight' => 3,
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#title' => t("Required Parts"),
+      );
+      $form['required']['required_parts'] = array(
+        '#type' => 'checkboxes',
+        '#title' => t("Required Parts"),
+        '#description' => t("Choose which of these components should be required.
+        Only applies if you chose the field in the above <em>Author name</em> or <em>Preferred name</em> sections,
+        either <strong>Required</strong>, or <strong>Optional</strong>. (Ex. 1) If you <strong>Require</strong>
+        Author names, then the fields checked here will be a part of that requirement. Unchecked fields will be optional
+        if you elected to use them above.
+        (Ex. 2) If Preferred names are <strong>Optional</strong>, then all fields are optional until one is filled in,
+        then those checked here are required. Unchecked fields would still be optional. This will
+        prevent the entering of partial/incomplete names."),
+        '#default_value' => $required_default,
+        '#options' => array(
+          'legal_Name'  => t("Author Name"),
+          'legal_Organization' => t("Author Organization"),
+          'legal_Email'   => t("Author Email"),
+          'legal_Role'   => t("Author Role"),
+        ),
+      );
+
+      //----------allow content type creator to determine which Author name fields to use-----------
+      $legal_default = array();
+      if (is_array($field['legalname'])) {
+        foreach ($field['legalname'] as $part => $legal) {
+          if ($legal) { $legal_default[] = $part; }
+        } // foreach possibly-Author part
+      } else {
+        $legal_default = array('legal_Name', 'legal_Organization', 'legal_Email');
+      } // if we can make up our own default
+  
+      $form['legal_name'] = array(
+        '#type' => 'fieldset',
+        '#weight' => 2,
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#title' => t('Author Name'),
+      );
+      $form['legal_name']['use_legalname'] = array(
+        '#type' => 'radios',
+        '#title' => t('Use Author name?'),
+        '#description' => t("Check how Author names should be used. The Author name is the default name when only one is needed."),
+        '#required' => TRUE,
+        '#default_value' => isset($field['use_legalname']) ? $field['use_legalname'] : 'legal_require',
+        '#options' => array(
+          'legal_require' => t("Required"),
+          'legal_optional'  => t("Optional"),
+        ),
+      );
+      $form['legal_name']['legalname'] = array(
+        '#type' => 'checkboxes',
+        '#title' => t('Author name'),
+        '#description' => t("Check which of these fields should be available for Author names."),
+        '#required' => TRUE,
+        '#default_value' => $legal_default,
+        '#options' => array(
+          'legal_Name'  => t("Name"),
+          'legal_Organization' => t("Organization"),
+          'legal_Email'   => t("Email"),
+          'legal_Role'   => t("Role"),
+        ),
+      );
+      //end borrowed section
+      
+      $form['note'] = array(
+        '#type' => 'item',
+        '#title' => t('Notes'),
+        '#weight' => -1,
+        '#description' => t('In the "Help text" field above, cut and paste the following: Notice the stars indicating what is required.
+        If either "Author name" or "Preferred name" have stars next to them, that means you must fill out at least the fields which have a highlighted border.
+        If either "Author name" or "Preferred name" do not have stars, then you only fill out the fields which have a highlighted border if you fill out ANY of the
+        fields. If you leave all highlighted fields blank for an unstarred name, then you don\'t have to fill out ANY of them. For multiple sets of
+        names, names after the Name set are always optional, but their fields will follow the same rules as optional names already explained.'),
+      );
+      
+      $form['Organization_initial'] = array(//TODO remove this because with the ability to specify the field length, this is redundant
+        '#type' => 'checkbox',
+        '#title' => t('Use Organization initial only?'),
+        '#default_value' => isset($field['Organization_initial']) ? $field['Organization_initial'] : 1,
+        '#return_value' => 1,
+        '#description' => t('Do you want to store only Organization initials? This is not simply a display option and should be set only once. Changing it has unpredictable results.'),
+      );
+      
+      //-------------specify maximum lengths for each field------------------------
+      $form['max_lengths_legal'] = array(
+        '#type' => 'fieldset',
+        '#weight' => 4,
+        '#title' => t('Author name maximum field lengths'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      );
+      $form['max_lengths_legal']['max_length_Name_legal'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Name maximum length'),
+        '#size' => 6,
+        '#default_value' => isset($field['max_length_Name_legal']) ? $field['max_length_Name_legal'] : '',
+        '#required' => FALSE,
+        '#description' => t('The maximum length of the field in characters. Leave blank for an unlimited size.'),
+      );
+      $form['max_lengths_legal']['max_length_Organization_legal'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Organization name maximum length'),
+        '#size' => 6,
+        '#required' => FALSE,
+        '#description' => t('The maximum length of the field in characters (unless Organization Initial is used instead). Leave blank for an unlimited size.'),
+      );
+      if ($field['Organization_initial'] == 1) {
+        $form['max_lengths_legal']['max_length_Organization_legal']['#default_value'] = 1;
+      }
+      else {
+        $form['max_lengths_legal']['max_length_Organization_legal']['#default_value'] = isset($field['max_length_Organization_legal']) ? $field['max_length_Organization_legal'] : '';
+      }
+      $form['max_lengths_legal']['max_length_Email_legal'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Email name maximum length'),
+        '#size' => 6,
+        '#default_value' => isset($field['max_length_Email_legal']) ? $field['max_length_Email_legal'] : '',
+        '#required' => FALSE,
+        '#description' => t('The maximum length of the field in characters. Leave blank for an unlimited size.'),
+      );
+     
+      return $form;
+
+    case 'save':
+      return array(
+        'required_parts',
+        'use_legalname',
+        'legalname',
+        'use_preferredname',
+        'preferredname',
+        'Organization_initial',
+        'max_length_Name_legal',
+        'max_length_Organization_legal',
+        'max_length_Email_legal',
+      );
+      
+    case 'database columns':
+      $columns = array(
+        'Email' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => "''", 'sortable' => TRUE),
+        'Name' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => "''", 'sortable' => TRUE),
+        'Organization' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => "''", 'sortable' => TRUE),
+      );
+      //adjust field lengths based on settings for Author names
+      /* 
+      
+      if ($field['max_lengths_legal']['max_length_Name_legal'] == 0 || $field['max_lengths_legal']['max_length_Name_legal'] > 255) {
+        $columns['Name']['type'] = 'longtext';
+      }
+      else {
+        $columns['Name']['length'] = $field['max_lengths_legal']['max_length_Name_legal'];
+      }
+      if (($field['max_lengths_legal']['max_length_Organization_legal'] == 0 || $field['max_lengths_legal']['max_length_Organization_legal'] > 255) && ($field['Organization_initial'] != 1)) {
+        $columns['Organization']['type'] = 'longtext';
+      }
+      elseif ($field['Organization_initial'] == 1) {
+        $columns['Organization']['length'] = 1;
+      }
+      else {
+        $columns['Organization']['length'] = $field['max_lengths_legal']['max_length_Organization_legal'];
+      }
+      if ($field['max_lengths_legal']['max_length_Email_legal'] == 0 || $field['max_lengths_legal']['max_length_Email_legal'] > 255) {
+        $columns['Email']['type'] = 'longtext';
+      }
+      else {
+        $columns['Email']['length'] = $field['max_lengths_legal']['max_length_Email_legal'];
+      }
+      if ($field['max_lengths_legal']['max_length_suffix_legal'] == 0 || $field['max_lengths_legal']['max_length_suffix_legal'] > 255) {
+        $columns['suffix']['type'] = 'longtext';
+      }
+      else {
+        $columns['suffix']['length'] = $field['max_lengths_legal']['max_length_suffix_legal'];
+      } */
+
+      return $columns;
+
+   case 'filters':
+     return array(
+        'default' => array(
+          'operator' => 'views_handler_operator_like',
+          'handler' => 'views_handler_filter_like',
+        ),
+      );
+     
+    case 'callbacks'://pairs up with cck_lom_author_name_field::view
+      return array(
+        'view' => CONTENT_CALLBACK_CUSTOM,
+      );
+  }
+} // function cck_lom_author_name_field_settings()
+
+/**
+ * Implementation of hook_field().
+ * 
+ * Validate the user's input. At present, only English alphabetic characters
+ * are valid. Would like to add support for other languages.
+ * Or present the data for viewing.
+ * @param $op
+ *   What kind of action is being performed.
+ * @param &$node
+ *   The node the action is being performed on.
+ * @param $field
+ *   The field the action is being performed on.
+ * @param &$node_field
+ *   The contents of the field in this node. Changes to this variable will
+ *   be saved back to the node object.
+ * @return
+ *   This varies depending on the operation.
+ *   - The "load" operation should return an object containing extra values
+ *     to be merged into the node object.
+ *   - The "view" operation should return a string containing an HTML
+ *     representation of the field data.
+ *   - The "insert", "update", "delete", "validate", and "submit" operations
+ *     have no return value.
+ */
+function cck_lom_author_name_field($op, &$node, $field, &$items, $teaser, $page) {
+  switch ($op) {
+    case 'submit':
+      $info = content_database_info($field['field_name']);
+      break;
+    case 'validate':
+      //validate field lengths
+      //validate the Author name field lengths; TODO restructure these into one big foreach instead of several small ones - use a case statement on $data, then test field lengths in each case
+      if ($field['max_lengths_legal']['max_length_prefix_legal'] > 0) {
+        foreach ($items as $delta => $data) {
+          $error_field_prefix = $field['field_name']. '][' .$delta. '][prefix';
+          if (strlen($data['prefix']) > $field['max_lengths_legal']['max_length_prefix_legal']) {
+            form_set_error($error_field_prefix, t('%label\'s Prefix Name field is longer than %max characters.', array('%label' => $field['widget']['label'], '%max' => $field['max_lengths_legal']['max_length_prefix_legal'])));
+          }
+        }
+      }
+      if ($field['max_lengths_legal']['max_length_Name_legal'] > 0) {
+        foreach ($items as $delta => $data) {
+          $error_field_Name = $field['field_name']. '][' .$delta. '][Name';
+          if (strlen($data['Name']) > $field['max_lengths_legal']['max_length_Name_legal']) {
+            form_set_error($error_field_Name, t('%label\'s Name Name field is longer than %max characters.', array('%label' => $field['widget']['label'], '%max' => $field['max_lengths_legal']['max_length_Name_legal'])));
+          }
+        }
+      }
+      if ($field['max_lengths_legal']['max_length_Organization_legal'] > 0) {
+        foreach ($items as $delta => $data) {
+          $error_field_Organization = $field['field_name']. '][' .$delta. '][Organization';
+          if (strlen($data['Organization']) > $field['max_lengths_legal']['max_length_Organization_legal']) {
+            form_set_error($error_field_Organization, t('%label\'s Organization Name field is longer than %max characters.', array('%label' => $field['widget']['label'], '%max' => $field['max_lengths_legal']['max_length_Organization_legal'])));
+          }
+        }
+      }
+      if ($field['max_lengths_legal']['max_length_Email_legal'] > 0) {
+        foreach ($items as $delta => $data) {
+          $error_field_Email = $field['field_name']. '][' .$delta. '][Email';
+          if (strlen($data['Email']) > $field['max_lengths_legal']['max_length_Email_legal']) {
+            form_set_error($error_field_Email, t('%label\'s Email Name field is longer than %max characters.', array('%label' => $field['widget']['label'], '%max' => $field['max_lengths_legal']['max_length_Email_legal'])));
+          }
+        }
+      }
+      if ($field['max_lengths_legal']['max_length_suffix_legal'] > 0) {
+        foreach ($items as $delta => $data) {
+          $error_field_suffix = $field['field_name']. '][' .$delta. '][suffix';
+          if (strlen($data['suffix']) > $field['max_lengths_legal']['max_length_suffix_legal']) {
+            form_set_error($error_field_suffix, t('%label\'s Suffix Name field is longer than %max characters.', array('%label' => $field['widget']['label'], '%max' => $field['max_lengths_legal']['max_length_suffix_legal'])));
+          }
+        }
+      }
+      
+      //validate required-ness of fields
+      foreach ($items as $delta => $data) {
+        if (is_numeric($delta)) {
+          //deal with Author name fields
+          if (($field['use_legalname'] == 'legal_require') || ($field['use_legalname'] == 'legal_optional')) {
+            $legal_empty = (empty($data['prefix']) && empty($data['Name']) && empty($data['Organization']) && empty($data['Email']) && empty($data['suffix']));
+            if (!$legal_empty) {
+              if (empty($data['prefix']) && $field['required_parts']['legal_prefix'] === 'legal_prefix' && !empty($field['legalname']['legal_prefix'])) {
+                $error_field_prefix = $field['field_name']. '][' .$delta. '][prefix';
+                form_set_error($error_field_prefix, t('Prefix field is required.'));
+              }
+              if (empty($data['Name']) && $field['required_parts']['legal_Name'] === 'legal_Name' && !empty($field['legalname']['legal_Name'])) {
+                $error_field_Name = $field['field_name']. '][' .$delta. '][Name';
+                form_set_error($error_field_Name, t('Name name field is required.'));
+              }
+              if (empty($data['Organization']) && $field['required_parts']['legal_Organization'] === 'legal_Organization' && !empty($field['legalname']['legal_Organization'])) {
+                $error_field_Organization = $field['field_name']. '][' .$delta. '][Organization';
+                form_set_error($error_field_Organization, t('Organization name field is required.'));
+              }
+              if (empty($data['Email']) && $field['required_parts']['legal_Email'] === 'legal_Email' && !empty($field['legalname']['legal_Email'])) {
+                $error_field_Email = $field['field_name']. '][' .$delta. '][Email';
+                form_set_error($error_field_Email, t('Email name field is required.'));
+              }
+              if (empty($data['suffix']) && $field['required_parts']['legal_suffix'] === 'legal_suffix' && !empty($field['legalname']['legal_suffix'])) {
+                $error_field_suffix = $field['field_name']. '][' .$delta. '][suffix';
+                form_set_error($error_field_suffix, t('Suffix field is required.'));
+              }
+            }
+            elseif ($field['use_legalname'] == 'legal_require') {
+              form_set_error($field['field_name']. '][' .$delta. ']', t('Author name field is required.'));
+            }
+          }
+        }
+      }
+      break;
+    
+    case 'view':
+      $context = $teaser ? 'teaser' : 'full';
+      $formatter = isset($field['display_settings'][$context]['format']) ? $field['display_settings'][$context]['format'] : 'default';
+      foreach ($items as $delta => $item) {
+        $items[$delta]['view'] = content_format($field, $item, $formatter, $node);
+      }
+      return theme('field', $node, $field, $items, $teaser, $page);
+  }
+} // function cck_lom_author_name_field()
+
+/**
+ * Implementation of hook_field_formatter_info().
+ */
+function cck_lom_author_name_field_formatter_info() {
+  return array(
+    'default' => array(
+      'label' => t('Default, prefix Name Organization Email suffix'),
+      'field types' => array('cck_lom_author_name'),
+    ),
+    'Email_only' => array(
+      'label' => t('Email only'),
+      'field types' => array('cck_lom_author_name'),
+    ),
+    'Name_only' => array(
+      'label' => t('Name only'),
+      'field types' => array('cck_lom_author_name'),
+    ),
+    'Email_name' => array(
+      'label' => t('Email, Name, Organization'),
+      'field types' => array('cck_lom_author_name'),
+    ),
+  );
+} // function cck_lom_author_name_field_formatter_info()
+
+/**
+ * Implemetation of hook_field_formatter().
+ *
+ * Here we format the data for display and make sure it is plain text. It should be as 
+ * elsewhere it was validated as alphabetic characters only.
+ * We also check the length of each name and if it's only one character, place a period
+ * after it. Primarily this is for people who go by two initials, or who use an initial
+ * for their Name name, but not Organization.
+ * The $node argument is necessary so that filter access can be checked on
+ * node preview. 
+ * @param $field
+ *   The field the action is being performed on.
+ * @param $item
+ *   An array, keyed by column, of the data stored for this item in this field.
+ * @param $formatter
+ *   The name of the formatter being used to display the field. In our case, we name
+ *   it directly, rather than send it through content_format() and therefore we don't
+ *   use hook_field_formatter_info either.
+ * @param $node
+ *   The node object, for context. Will be NULL in some cases.
+ *   Warning : when displaying field retrieved by Views, $node will not
+ *   be a "full-fledged" node object, but an object containg the data returned
+ *   by the Views query (at least nid, vid, changed)
+ * @return
+ *   An HTML string containing the formatted item.
+ */
+function cck_lom_author_name_field_formatter($field, $item, $formatter, $node) {
+  $output = '';
+  if (!key_exists('prefix', $item)) {
+    return '';
+  }
+  switch ($formatter) {
+    case 'default':
+      //check and clean the values for output
+      if (!empty($item['prefix'])) {
+        $cck_legalname['prefix'] = strip_tags($item['prefix']);
+      }
+      if (!empty($item['Name'])) {
+        $cck_legalname['Name'] = strip_tags($item['Name']);
+      }
+      if (!empty($item['Organization'])) {
+        $cck_legalname['Organization'] = strip_tags($item['Organization']);
+      }
+      if (!empty($item['Email'])) {
+        $cck_legalname['Email'] = strip_tags($item['Email']);
+      }
+      if (!empty($item['Role'])) {
+        $cck_legalname['Role'] = strip_tags($item['Role']);
+      }
+      if (!empty($item['suffix'])) {
+        $cck_legalname['suffix'] = strip_tags($item['suffix']);
+      }
+      if (!empty($cck_legalname)) {
+        $output .= t('Author name: '). theme('cck_lom_author_name', $cck_legalname, $field);
+      }
+      if (!empty($item['prefix_preferred'])) {
+        $cck_preferredname['prefix'] = strip_tags($item['prefix_preferred']);
+      }
+      if (!empty($item['Name_preferred'])) {
+        $cck_preferredname['Name'] = strip_tags($item['Name_preferred']);
+      }
+      if (!empty($item['Organization_preferred'])) {
+        $cck_preferredname['Organization'] = strip_tags($item['Organization_preferred']);
+      }
+      if (!empty($item['Email_preferred'])) {
+        $cck_preferredname['Email'] = strip_tags($item['Email_preferred']);
+      }
+      if (!empty($item['Role_preferred'])) {
+        $cck_preferredname['Role'] = strip_tags($item['Role_preferred']);
+      }
+      if (!empty($item['suffix_preferred'])) {
+        $cck_preferredname['suffix'] = strip_tags($item['suffix_preferred']);
+      }
+      if (!empty($cck_preferredname)) {//if there is a preferred name, print it instead of the Author name (overwrite $output)
+        $output = t('Preferred name: '). theme('cck_lom_author_name', $cck_preferredname, $field);
+      }
+      return $output;
+    case 'Email_only'://output Author Email name
+      //check and clean the values for output
+        if (isset($item['Email'])) {
+          $cck_lom_author_name['Email'] = strip_tags($item['Email']);
+        }
+        $output .= theme('cck_lom_author_name', $cck_lom_author_name, $field);
+      return $output;
+    case 'Name_only'://output preferred Name name
+      //check and clean the values for output
+        if (isset($item['Name_preferred'])) {
+          $cck_lom_author_name['Name_preferred'] = strip_tags($item['Name_preferred']);
+        }
+        $output .= theme('cck_lom_author_name', $cck_lom_author_name, $field);
+      return $output;
+    case 'Email_name':
+      //check and clean the values for output
+      if (!empty($item['Name'])) {
+        $cck_legalname['Name'] = strip_tags($item['Name']);
+      }
+      if (!empty($item['Organization'])) {
+        $cck_legalname['Organization'] = strip_tags($item['Organization']);
+      }
+      if (!empty($item['Email'])) {
+        $cck_legalname['Email'] = strip_tags($item['Email']);
+      }
+      if (!empty($item['Role'])) {
+        $cck_legalname['Role'] = strip_tags($item['Role']);
+      }
+      if (!empty($cck_legalname)) {
+        $output .= t('Author name: '). theme('cck_lom_author_name', $cck_legalname, $field, TRUE);
+      }
+      return $output;
+  }
+} // function cck_lom_author_name_field_formatter()
+
+/**
+ * Theme for address display as called from cck_lom_author_name_field_formatter().
+ * 
+ * @param array $cck_lom_author_name
+ * @param array $field
+ * @param boolean $Email_Name TRUE if displayed Email name Name
+ * @return string $output
+ */
+function theme_cck_lom_author_name($cck_lom_author_name, $field, $Email_Name = FALSE) {
+ 
+  $output = '';
+  //create the output
+  if ($Email_Name) {
+    if (isset($cck_lom_author_name['Email'])) {
+      $output .= $cck_lom_author_name['Email'];
+      if (strlen($cck_lom_author_name['Email']) == 1) $output .= '., ';
+      else $output .= ', ';
+    }
+    if (isset($cck_lom_author_name['Name'])) {
+      $output .= $cck_lom_author_name['Name'];
+      if (strlen($cck_lom_author_name['Name']) == 1) $output .= '. ';
+      else $output .= ' ';
+    }
+    if (isset($cck_lom_author_name['Organization'])) {
+      $output .= $cck_lom_author_name['Organization'];
+      if ($field['Organization_initial'] == 1) $output .= '. ';
+      else $output .= ', ';
+    }
+    if (isset($cck_lom_author_name['Role'])) {
+      $output .= $cck_lom_author_name['Role'];
+      if ($field['Role_initial'] == 1) $output .= '. ';
+      else $output .= ', ';
+    }
+    $output .= '<br />';
+  } 
+  else {
+    if (isset($cck_lom_author_name['Name'])) {
+      $output .= $cck_lom_author_name['Name'];
+      if (strlen($cck_lom_author_name['Name']) == 1) $output .= '. ';
+      else $output .= ' ';
+    }
+    if (isset($cck_lom_author_name['Organization'])) {
+      $output .= $cck_lom_author_name['Organization'];
+      if ($field['Organization_initial'] == 1) $output .= '. ';
+      else $output .= ' ';
+    }
+    if (isset($cck_lom_author_name['Email'])) {
+      $output .= $cck_lom_author_name['Email'];
+      if (strlen($cck_lom_author_name['Email']) == 1) $output .= '. ';
+      else $output .= ' ';
+    }
+    if (isset($cck_lom_author_name['Role'])) {
+      $output .= $cck_lom_author_name['Role'];
+      if (strlen($cck_lom_author_name['Role']) == 1) $output .= '. ';
+      else $output .= ' ';
+    }
+    $output .= '<br />';
+  }
+  return $output;
+} // function theme_cck_lom_author_name()
+
+/**
+ * Implementation of hook_widget_info().
+ * 
+ * @return
+ *   An array keyed by widget name. Each element of the array is an associative
+ *   array with these keys and values:
+ *   - "label": The human-readable label for the widget.
+ *   - "field types": An array of field type names that can be edited using
+ *     this widget.
+ */
+function cck_lom_author_name_widget_info() {
+  return array(
+    'cck_lom_author_name' => array(
+      'label' => 'LOM Author Name',
+      'field types' => array('cck_lom_author_name'),
+    ),
+  );
+} // function cck_lom_author_name_widget_info()
+
+/**
+ * Implementation of hook_widget_settings().
+ * 
+ * @param $op
+ *   The operation to be performed.
+ * @param $widget
+ *   The widget on which the operation is to be performed.
+ * @return
+ *   This varies depending on the operation.
+ *   - "form": an array of form elements to add to the settings page.
+ *   - "validate": no return value. Use form_set_error().
+ *   - "save": an array of names of form elements to be saved in the database.
+ *   - "callbacks": an array describing the widget's behaviour regarding hook_widget 
+ *     operations. The array is keyed by hook_widget operations ('form', 'validate'...)
+ *     and has the following possible values : 
+ *       CONTENT_CALLBACK_NONE     : do nothing for this operation 
+ *       CONTENT_CALLBACK_CUSTOM   : use the behaviour in hook_widget(operation)
+ *       CONTENT_CALLBACK_DEFAULT  : use content.module's default bahaviour
+ *     Note : currently only the 'default value' operation implements this feature.
+ *     All other widget operation implemented by the module _will_ be executed 
+ *     no matter what.
+ */
+function cck_lom_author_name_widget_settings($op, $widget) {
+
+  switch ($op) {
+    case 'callbacks':
+      return array(
+        'default value' => CONTENT_CALLBACK_CUSTOM,
+      );
+  }
+} // function cck_lom_author_name_widget_settings()
+
+/**
+ * Implementation of hook_widget().
+ * 
+ * Presently, we don't allow multiple values as people should only have one name.
+ * Also, we intercept the default value fields and unset() them as I couldn't think
+ * of a use case for pre-setting a person's name. We also use a little bit of CSS
+ * to render the form fields approximately the 'size' they've been specified in 'ems'
+ * as the 'size' was not being rendered in 'ems' but as some fraction thereof; this
+ * because a name with mostly wide letters wasn't all fitting in the display. 
+ * @param $op
+ *   What kind of action is being performed.
+ * @param &$node
+ *   The node the action is being performed on.
+ * @param $field
+ *   The field the action is being performed on.
+ * @param &$node_field
+ *   The contents of the field in this node. Changes to this variable will
+ *   be saved back to the node object.
+ * @return
+ *   This varies depending on the operation.
+ *   - The "form" operation should return an array of form elements to display.
+ *   - Other operations have no return value.
+ */
+function cck_lom_author_name_widget($op, &$node, $field, &$items) {
+
+  switch ($op['#type']) {
+    case 'form': 
+      $form = array();
+      $form[$field['field_name']] = array('#tree' => TRUE);
+      $form[$field['field_name']]['#theme'] = 'cck_lom_author_name_display';
+        
+      $form[$field['field_name']]['use_legalname'] = array(
+        '#type' => 'value',
+        '#value' => $field['use_legalname'],
+      );
+      $form[$field['field_name']]['required_parts'] = array(
+        '#type' => 'value',
+        '#value' => $field['required_parts'],
+      );
+      $form[$field['field_name']]['legalname'] = array(
+        '#type' => 'value',
+        '#value' => $field['legalname'],
+      );
+      
+      $form[$field['field_name']]['#type'] = 'fieldset';
+      $form[$field['field_name']]['#attributes'] = array('class' => 'cck-fullname-fieldset');
+      $form[$field['field_name']]['#title'] = ucFirst(t($field['widget']['label']));
+      $form[$field['field_name']]['#description'] = $field['widget']['description'];
+      $form[$field['field_name']]['#weight'] = $field['widget']['weight'];
+      if ($field['multiple']) {
+        $delta = 0;
+        foreach ($items as $data) {
+          if (isset($field['legalname']['legal_prefix'])) {
+            $form[$field['field_name']][$delta]['prefix'] = array(
+              '#type' => 'textfield',
+              '#default_value' => isset($data['prefix']) ? $data['prefix'] : '',
+              '#size' => $field['max_length_prefix_legal'] ? $field['max_length_prefix_legal'] : NULL,
+              '#maxlength' => $field['max_length_prefix_legal'] ? $field['max_length_prefix_legal'] : NULL,
+            );
+            if ($field['required_parts']['legal_prefix'] === 'legal_prefix') {
+              $form[$field['field_name']][$delta]['prefix']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+            }
+            else {
+              $form[$field['field_name']][$delta]['prefix']['#attributes'] = $field['max_length_prefix_legal'] ? array('style' => 'width:' .$field["max_length_prefix_legal"]*0.85. 'em') : array();
+            }
+          }
+          
+          if (isset($field['legalname']['legal_Name'])) {  
+            $form[$field['field_name']][$delta]['Name'] = array(
+              '#type' => 'textfield',
+              '#default_value' => isset($data['Name']) ? $data['Name'] : '',
+              '#size' => $field['max_length_Name_legal'] ? $field['max_length_Name_legal'] : NULL,
+              '#maxlength' => $field['max_length_Name_legal'] ? $field['max_length_Name_legal'] : NULL,
+            );
+            if ($field['required_parts']['legal_Name'] === 'legal_Name') {
+              $form[$field['field_name']][$delta]['Name']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+            }
+            else {
+              $form[$field['field_name']][$delta]['Name']['#attributes'] = $field['max_length_Name_legal'] ? array('style' => 'width:' .$field["max_length_Name_legal"]*0.85. 'em') : array();
+            }
+          }
+          
+          if (isset($field['legalname']['legal_Organization'])) {  
+            $form[$field['field_name']][$delta]['Organization'] = array(
+              '#type' => 'textfield',
+              '#default_value' => isset($data['Organization']) ? $data['Organization'] : '',
+              '#size' => $field['max_length_Organization_legal'] ? $field['max_length_Organization_legal'] : NULL,
+              '#maxlength' => $field['max_lengths']['max_length_Organization_legal'] ? $field['max_lengths']['max_length_Organization_legal'] : NULL,
+            );
+            if ($field['required_parts']['legal_Organization'] === 'legal_Organization') {
+              $form[$field['field_name']][$delta]['Organization']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+            }
+            else {
+              if ($field['Organization_initial'] == 1) {
+                $form[$field['field_name']][$delta]['Organization']['#maxlength'] = 1;
+                $form[$field['field_name']][$delta]['Organization']['#attributes'] = array('style' => 'width:1em');
+              }
+              else {
+                $form[$field['field_name']][$delta]['Organization']['#maxlength'] = $field['max_length_Organization_legal'] ? $field['max_length_Organization_legal'] : NULL;
+                $form[$field['field_name']][$delta]['Organization']['#attributes'] = $field['max_length_Organization_legal'] ? array('style' => 'width:' .$field["max_length_Organization_legal"]*0.85. 'em') : array();
+              }
+            }
+          }
+          
+          if (isset($field['legalname']['legal_Email'])) {  
+            $form[$field['field_name']][$delta]['Email'] = array(
+              '#type' => 'textfield',
+              '#default_value' => isset($data['Email']) ? $data['Email'] : '',
+              '#size' => $field['max_lengths']['max_length_Email_legal'] ? $field['max_lengths']['max_length_Email_legal'] : NULL,
+              '#maxlength' => $field['max_lengths']['max_length_Email_legal'] ? $field['max_lengths']['max_length_Email_legal'] : NULL,
+            );
+            if ($field['required_parts']['legal_Email'] === 'legal_Email') {
+              $form[$field['field_name']][$delta]['Email']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+            }
+            else {
+              $form[$field['field_name']][$delta]['Email']['#attributes'] = $field['max_length_Email_legal'] ? array('style' => 'width:' .$field["max_length_Email_legal"]*0.85. 'em') : array();
+            }
+          }
+          if (isset($field['legalname']['legal_Role'])) {  
+            $form[$field['field_name']][$delta]['Role'] = array(
+              '#type' => 'textfield',
+              '#default_value' => isset($data['Role']) ? $data['Role'] : '',
+              '#size' => $field['max_lengths']['max_length_Role_legal'] ? $field['max_lengths']['max_length_Role_legal'] : NULL,
+              '#maxlength' => $field['max_lengths']['max_length_Role_legal'] ? $field['max_lengths']['max_length_Role_legal'] : NULL,
+            );
+            if ($field['required_parts']['legal_Role'] === 'legal_Role') {
+              $form[$field['field_name']][$delta]['Role']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+            }
+            else {
+              $form[$field['field_name']][$delta]['Role']['#attributes'] = $field['max_length_Role_legal'] ? array('style' => 'width:' .$field["max_length_Role_legal"]*0.85. 'em') : array();
+            }
+          }          
+          $delta++;
+        }
+        foreach (range($delta, $delta + 2) as $delta) {
+        
+          global $user;
+ 
+ 	  $result = db_query("SELECT value FROM {profile_values} WHERE (uid = %d) AND (fid = 1)", $user->uid);
+	  $authorname = db_fetch_array($result);
+       
+          if ($delta == 0) {
+		  if (isset($field['legalname']['legal_Name'])) {
+		    $form[$field['field_name']][$delta]['Name'] = array(
+		      '#type' => 'textfield',
+		      '#default_value' => $authorname['value'],
+		      '#size' => $field['max_length_Name_legal'] ? $field['max_length_Name_legal'] : NULL,
+		      '#maxlength' => $field['max_length_Name_legal'] ? $field['max_length_Name_legal'] : NULL,
+		      '#prefix' => '<div class="cck-fullname-Name2">',
+		      '#suffix' => '</div>',
+		    );
+		    if ($field['required_parts']['legal_Name'] === 'legal_Name') {
+		      $form[$field['field_name']][$delta]['Name']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+		    }
+		    else {
+		      $form[$field['field_name']][$delta]['Name']['#attributes'] = $field['max_length_Name_legal'] ? array('style' => 'width:' .$field["max_length_Name_legal"]*0.85. 'em') : array();
+		    }
+		  }
+          }
+          else {
+ 		  if (isset($field['legalname']['legal_Name'])) {
+		    $form[$field['field_name']][$delta]['Name'] = array(
+		      '#type' => 'textfield',
+		      '#default_value' => '',
+		      '#size' => $field['max_length_Name_legal'] ? $field['max_length_Name_legal'] : NULL,
+		      '#maxlength' => $field['max_length_Name_legal'] ? $field['max_length_Name_legal'] : NULL,
+		    );
+		    if ($field['required_parts']['legal_Name'] === 'legal_Name') {
+		      $form[$field['field_name']][$delta]['Name']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+		    }
+		    else {
+		      $form[$field['field_name']][$delta]['Name']['#attributes'] = $field['max_length_Name_legal'] ? array('style' => 'width:' .$field["max_length_Name_legal"]*0.85. 'em') : array();
+		    }
+		  }
+          }
+ 
+  	  $result2 = db_query("SELECT value FROM {profile_values} WHERE (uid = %d) AND (fid = 2)", $user->uid);
+	  $authororganization = db_fetch_array($result2);
+	  
+           if ($delta == 0) {
+		  if (isset($field['legalname']['legal_Organization'])) {
+		    $form[$field['field_name']][$delta]['Organization'] = array(
+		      '#type' => 'textfield',
+		      '#default_value' => $authororganization['value'],
+		      '#size' => $field['max_length_Organization_legal'] ? $field['max_length_Organization_legal'] : NULL,
+		      '#maxlength' => $field['max_lengths']['max_length_Organization_legal'] ? $field['max_lengths']['max_length_Organization_legal'] : NULL,
+		      '#prefix' => '<div class="cck-fullname-Organization2">',
+		      '#suffix' => '</div>',
+		    );
+		    if ($field['required_parts']['legal_Organization'] === 'legal_Organization') {
+		      $form[$field['field_name']][$delta]['Organization']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+		    }
+		    else {
+		      if ($field['Organization_initial'] == 1) {
+			$form[$field['field_name']][$delta]['Organization']['#maxlength'] = 1;
+			$form[$field['field_name']][$delta]['Organization']['#attributes'] = array('style' => 'width:1em');
+		      }
+		      else {
+			$form[$field['field_name']][$delta]['Organization']['#maxlength'] = $field['max_length_Organization_legal'] ? $field['max_length_Organization_legal'] : NULL;
+			$form[$field['field_name']][$delta]['Organization']['#attributes'] = $field['max_length_Organization_legal'] ? array('style' => 'width:' .$field["max_length_Organization_legal"]*0.85. 'em') : array();
+		      }
+		    }
+		  }
+          }
+          else {
+		  if (isset($field['legalname']['legal_Organization'])) {
+		    $form[$field['field_name']][$delta]['Organization'] = array(
+		      '#type' => 'textfield',
+		      '#default_value' => '',
+		      '#size' => $field['max_length_Organization_legal'] ? $field['max_length_Organization_legal'] : NULL,
+		      '#maxlength' => $field['max_lengths']['max_length_Organization_legal'] ? $field['max_lengths']['max_length_Organization_legal'] : NULL,
+		      '#prefix' => '<div class="cck-fullname-Organization2">',
+		      '#suffix' => '</div>',
+		    );
+		    if ($field['required_parts']['legal_Organization'] === 'legal_Organization') {
+		      $form[$field['field_name']][$delta]['Organization']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+		    }
+		    else {
+		      if ($field['Organization_initial'] == 1) {
+			$form[$field['field_name']][$delta]['Organization']['#maxlength'] = 1;
+			$form[$field['field_name']][$delta]['Organization']['#attributes'] = array('style' => 'width:1em');
+		      }
+		      else {
+			$form[$field['field_name']][$delta]['Organization']['#maxlength'] = $field['max_length_Organization_legal'] ? $field['max_length_Organization_legal'] : NULL;
+			$form[$field['field_name']][$delta]['Organization']['#attributes'] = $field['max_length_Organization_legal'] ? array('style' => 'width:' .$field["max_length_Organization_legal"]*0.85. 'em') : array();
+		      }
+		    }
+		  }
+          }
+                   
+          if ($delta == 0) {
+		  if (isset($field['legalname']['legal_Email'])) {
+		     $form[$field['field_name']][$delta]['Email'] = array(
+		       '#type' => 'textfield',
+		       '#default_value' => $user->mail,
+		       '#size' => $field['max_lengths']['max_length_Email_legal'] ? $field['max_lengths']['max_length_Email_legal'] : NULL,
+		       '#maxlength' => $field['max_lengths']['max_length_Email_legal'] ? $field['max_lengths']['max_length_Email_legal'] : NULL,
+		     );
+		     if ($field['required_parts']['legal_Email'] === 'legal_Email') {
+		       $form[$field['field_name']][$delta]['Email']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+		     }
+		     else {
+		       $form[$field['field_name']][$delta]['Email']['#attributes'] = $field['max_length_Email_legal'] ? array('style' => 'width:' .$field["max_length_Email_legal"]*0.85. 'em') : array();
+		     }
+		  }
+          }
+          else {
+		  if (isset($field['legalname']['legal_Email'])) {
+		    $form[$field['field_name']][$delta]['Email'] = array(
+		      '#type' => 'textfield',
+		      '#default_value' => '',
+		      '#size' => $field['max_lengths']['max_length_Email_legal'] ? $field['max_lengths']['max_length_Email_legal'] : NULL,
+		      '#maxlength' => $field['max_lengths']['max_length_Email_legal'] ? $field['max_lengths']['max_length_Email_legal'] : NULL,
+		    );
+		    if ($field['required_parts']['legal_Email'] === 'legal_Email') {
+		      $form[$field['field_name']][$delta]['Email']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+		    }
+		    else {
+		      $form[$field['field_name']][$delta]['Email']['#attributes'] = $field['max_length_Email_legal'] ? array('style' => 'width:' .$field["max_length_Email_legal"]*0.85. 'em') : array();
+		    }
+		  }
+          }
+          if ($delta == 0) {
+		  if (isset($field['legalname']['legal_Role'])) {
+		     $form[$field['field_name']][$delta]['Role'] = array(
+		       '#type' => 'textfield',
+		       '#default_value' => $user->mail,
+		       '#size' => $field['max_lengths']['max_length_Role_legal'] ? $field['max_lengths']['max_length_Role_legal'] : NULL,
+		       '#maxlength' => $field['max_lengths']['max_length_Role_legal'] ? $field['max_lengths']['max_length_Role_legal'] : NULL,
+		     );
+		     if ($field['required_parts']['legal_Role'] === 'legal_Role') {
+		       $form[$field['field_name']][$delta]['Role']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+		     }
+		     else {
+		       $form[$field['field_name']][$delta]['Role']['#attributes'] = $field['max_length_Role_legal'] ? array('style' => 'width:' .$field["max_length_Role_legal"]*0.85. 'em') : array();
+		     }
+		  }
+          }
+          else {
+		  if (isset($field['legalname']['legal_Role'])) {
+		    $form[$field['field_name']][$delta]['Role'] = array(
+		      '#type' => 'textfield',
+		      '#default_value' => '',
+		      '#size' => $field['max_lengths']['max_length_Role_legal'] ? $field['max_lengths']['max_length_Role_legal'] : NULL,
+		      '#maxlength' => $field['max_lengths']['max_length_Role_legal'] ? $field['max_lengths']['max_length_Role_legal'] : NULL,
+		    );
+		    if ($field['required_parts']['legal_Role'] === 'legal_Role') {
+		      $form[$field['field_name']][$delta]['Role']['#attributes'] = array('style' => 'border: 2px solid #ff0000');
+		    }
+		    else {
+		      $form[$field['field_name']][$delta]['Role']['#attributes'] = $field['max_length_Role_legal'] ? array('style' => 'width:' .$field["max_length_Role_legal"]*0.85. 'em') : array();
+		    }
+		  }
+          }
+        }
+      }
+      else {
+
+      }
+      return $form;
+    
+    /*case 'default value':
+      unset ($field['widget']['default_value_php']);
+      unset ($field['widget']['default_value']);
+      break;*/
+
+    case 'process form values':
+      // Don't save empty fields except the Name value
+      foreach ($items as $delta => $item) {
+        if (!is_numeric($delta)) {
+          unset($items[$delta]);//if we don't do this, for some reason, the Name $delta of good values turns into a set of 'l's (the letter l)
+        }
+        //in the validation stage, we'll enforce required fields for $delta > 0, but let's just remove any totally empty $deltas now
+        elseif (($item['prefix'] == '') && ($item['Name'] == '') && ($item['Organization'] == '') && ($item['Email'] == '') && ($item['suffix'] == '') &&
+         ($item['prefix_preferred'] == '') && ($item['Name_preferred'] == '') && ($item['Organization_preferred'] == '') && ($item['Email_preferred'] == '') && ($item['suffix_preferred'] == '') && $delta > 0) {
+          unset($items[$delta]);
+        }
+      }
+      break;
+  }
+} //function cck_lom_author_name_widget()
+
+/**
+ * Display the input fields to the user.
+ * 
+ * @param array $form
+ * 	The data to be rendered.
+ * @return string An HTML string ready for display.
+ */
+function theme_cck_lom_author_name_display($form) {
+  drupal_add_css(drupal_get_path('module', 'cck_lom_author_name') .'/cck_lom_author_name.css', 'module', 'all', FALSE);
+  $output = '';
+  $rows = array();
+  $header = array();
+  
+  $header[] = t('');
+  if ($form['legalname']['#value']['legal_Name'] === 'legal_Name' || $form['preferredname']['#value']['preferred_Name'] === 'preferred_Name') {
+    $header[] = t('Name');
+  }
+  if ($form['legalname']['#value']['legal_Organization'] === 'legal_Organization' || $form['preferredname']['#value']['preferred_Organization'] === 'preferred_Organization') {
+    $header[] = t('Organization');
+  }
+  if ($form['legalname']['#value']['legal_Email'] === 'legal_Email' || $form['preferredname']['#value']['preferred_Email'] === 'preferred_Email') {
+    $header[] = t('Email');
+  }
+  if ($form['legalname']['#value']['legal_Role'] === 'legal_Role' || $form['preferredname']['#value']['preferred_Role'] === 'preferred_Role') {
+    $header[] = t('Role');
+  }
+  
+  foreach (element_children($form) as $delta) {
+    if (is_numeric($delta)) {
+      if ($form['use_legalname']['#value'] == 'legal_require') {
+        $rows[$delta]['name'] = '<div class="fullname-type required">'. t('1. Author info') .'<span class="form-required" title="This field is required.">*</span></div>';
+      }
+      else {
+        $rows[$delta]['name'] = '<div class="fullname-type">'. t($delta + 1 . '. Author info') .'</div>';
+      }
+      unset($form['use_legalname']);
+      
+      if ($form['legalname']['#value']['legal_Name'] === 'legal_Name') {
+        $rows[$delta]['Name'] = drupal_render($form[$delta]['Name']);
+      }
+      else {
+        $form[$delta]['Name']['#access'] = FALSE;
+      }
+      
+      if ($form['legalname']['#value']['legal_Organization'] === 'legal_Organization') {
+        $rows[$delta]['Organization'] = drupal_render($form[$delta]['Organization']);
+      }
+      else {
+        $form[$delta]['Organization']['#access'] = FALSE;
+      }
+      
+      if ($form['legalname']['#value']['legal_Email'] === 'legal_Email') {
+        $rows[$delta]['Email'] = drupal_render($form[$delta]['Email']);
+      }
+      else {
+        $form[$delta]['Email']['#access'] = FALSE;
+      }
+      
+      if ($form['legalname']['#value']['legal_Role'] === 'legal_Role') {
+        $rows[$delta]['Role'] = drupal_render($form[$delta]['Role']);
+      }
+      else {
+        $form[$delta]['Role']['#access'] = FALSE;
+      }      
+    }
+  }
+  unset($form['use_legalname']);
+  unset($form['required_parts']);
+  unset($form['legalname']);
+  $output .= theme('table', $header, $rows);
+  $output .= drupal_render($form);
+  return $output;
+} //function theme_cck_lom_author_name_display
+
+//-----------------------------------------Integration with other modules-----------------------------
+//-----------------------------------------Integration with other modules-----------------------------
+//-----------------------------------------Integration with other modules-----------------------------
+
+/**
+ * Implementation of hook_diff()
+ */
+function cck_lom_author_name_diff(&$old_node, &$new_node) {
+  $result = array();
+  $cck_info = content_types($new_node->type);
+  if ($cck_info) {
+    foreach ($cck_info['fields'] as $field) {
+      if ($field['type'] == 'cck_lom_author_name') {
+        $old_values = array(); 
+        $new_values = array();
+        if (isset($old_node->$field['field_name'])) {
+          $old_values = cck_lom_author_name_diff_values($old_node, $field);
+        }
+        if (isset($new_node->$field['field_name'])) {
+          $new_values = cck_lom_author_name_diff_values($new_node, $field);
+        }
+        foreach ($new_values as $key => $value) {
+          if (!isset($old_values[$key]) && ($new_values[$key] == '')) {
+            unset($new_values[$key]);
+          }
+        }
+        $result[] = array(
+          'name' => $field['widget']['label'],
+          'old' => $old_values,
+          'new' => $new_values,
+          'format' => array(
+            'show_header' => true,
+            ),
+          );
+      }
+    }
+  }
+  return $result;
+}
+
+/**
+ * A helper function for the diff hook
+ *
+ * @param object $node
+ * @param array $field
+ * @return array
+ */
+function cck_lom_author_name_diff_values(&$node, &$field) {
+  foreach ($node->$field['field_name'] as $item => $value) {
+    if (!is_numeric($item)) {
+      continue;
+    }
+    else {
+      $result[] = $value['Name'];
+      $result[] = $value['Organization'];
+      $result[] = $value['Email'];
+      $result[] = $value['Role'];
+    }
+  }
+  return $result;
+}
+
+/**
+ * Implementation of hook_token_values
+ *
+ * @param string $type $type contains the current context -- 'node', 'user', 'global', etc.
+ * @param mixed $object contains the specific node, user, etc. that should be used as the basis for the replacements.
+ * @return array $tokens
+ */
+function cck_lom_author_name_token_values($type, $object = NULL) {
+  if ($type == 'field') {
+    $tokens = array();
+    $something = $object[0];
+    $tokens['fullname'] = $something['view'];
+    $tokens['Name'] = check_plain($something['Name']);
+    $tokens['Organization'] = check_plain($something['Organization']);
+    $tokens['Email'] = check_plain($something['Email']);
+    $tokens['Role'] = check_plain($something['Role']);
+    return $tokens;
+  }
+} // function cck_lom_author_name_token_values()
+
+/**
+ * Implementation of hook_token_list
+ *
+ * @param string $type indicates the context that token help is being generated for.
+ * @return array $tokens
+ */
+function cck_lom_author_name_token_list($type = 'all') {
+  if ($type == 'field' || $type == 'all') {
+    $tokens = array();
+    $tokens['cck_lom_author_name']['fullname'] = t("The user's LOM Author Name");
+    $tokens['cck_lom_author_name']['Name'] = t("The user's Author Name name");
+    $tokens['cck_lom_author_name']['Organization'] = t("The user's Author Organization name or initial");
+    $tokens['cck_lom_author_name']['Email'] = t("The user's Author Email name");
+    $tokens['cck_lom_author_name']['Role'] = t("The user's Role name");
+    return $tokens;
+  }
+} // function cck_lom_author_name_token_list()

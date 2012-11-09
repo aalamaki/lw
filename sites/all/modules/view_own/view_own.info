@@ -1,0 +1,12 @@
+; $Id: view_own.info,v 1.1 2008/09/01 10:31:32 djuba Exp $
+name = View own
+description = Provide 'view own' and 'view any' access right for all content types
+core = 6.x
+
+
+; Information added by drupal.org packaging script on 2008-09-04
+version = "6.x-1.1"
+core = "6.x"
+project = "view_own"
+datestamp = "1220502629"
+

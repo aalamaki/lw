@@ -1,0 +1,190 @@
+<?php
+// $Id: flexifilter.test,v 1.1.6.6 2008/06/20 04:19:58 dmitrig01 Exp $
+
+/**
+ * Base flexifilter test class.
+ */
+class FlexifilterTestCase extends DrupalWebTestCase {
+
+  /**
+   * Load a flexifilter, refreshing the static cache.
+   */
+  function flexifilterLoad($fid, $delta = NULL, $refresh = TRUE) {
+    return flexifilter_flexifilter_load($fid, $delta, $refresh);
+  }
+
+  /**
+   * Save a flexifilter.
+   */
+  function flexifilterSave($flexifilter) {
+    flexifilter_flexifilter_save($flexifilter);
+  }
+
+  /**
+   * Install some flexifilters to play with.
+   */
+  function installFlexifilters() {
+    $fids = flexifilter_flexifilter_install('flexifilter');
+  	foreach ($fids as $fid) {
+  	  $this->assertTrue($fid !== FALSE, t('Check to make sure flexifilters install cleanly'));
+  	}
+    return $fids;
+  }
+
+  /**
+   * Delete a flexifilter.
+   */
+  function flexifilterDelete($fid) {
+    flexifilter_flexifilter_delete($fid);
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('flexifilter');
+  }
+
+  /**
+   * Implementation of tearDown().
+   */
+  function tearDown() {
+    // Stop messages from showing.
+    $message_array = drupal_get_messages();
+    foreach ($message_array as $type => $messages) {
+      foreach ($messages as $message) {
+        if ($type == 'status') {
+          $this->pass($message);
+        }
+        else {
+          $this->fail($message);
+        }
+      }
+    }
+    parent::tearDown();
+  }
+}
+
+/**
+ * Flexifilter API test.
+ */
+class FlexifilterAPITest extends FlexifilterTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Flexifilter API Tests'),
+      'description' => t('Checks basic flexifilter API functionality to make sure it works.'),
+      'group' => t('Flexifilter'),
+    );
+  }
+
+  /**
+   * Test function.
+   */
+  function testFlexifilterAPI() {
+    $fids = $this->installFlexifilters();
+  	foreach ($fids as $fid) {
+  	  $flexifilter = $this->flexifilterLoad($fid);
+  	  $this->assertTrue(is_array($flexifilter), t('Check to make sure flexifilters load correctly'));
+  	}
+  	foreach ($fids as $fid) {
+  	  $this->flexifilterDelete($fid);
+      $flexifilter = $this->flexifilterLoad($fid);
+  	  $this->assertTrue(empty($flexifilter), t('Check to make sure flexifilters delete properly.'));
+  	}
+  }
+}
+
+/**
+ * Flexifilter component/condition API test.
+ */
+class FlexifilterPartAPITest extends FlexifilterTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Flexifilter Components/Conditions API Tests'),
+      'description' => t('Attempts to use API functions to add, invoke, and remove flexifilter components and conditions.'),
+      'group' => t('Flexifilter'),
+    );
+  }
+
+  /**
+   * Test function. Save a flexifilter component to the db, and reload it.
+   */
+  function testFlexifilterPartSaveLoad() {
+    $fids = $this->installFlexifilters();
+    foreach ($fids as $fid) {
+      $flexifilter = $this->flexifilterLoad($fid);
+      $random_name = $this->randomName();
+      $random_key = $this->randomName();
+      $flexifilter['components'][] = array(
+        'pid' => 'new',
+        'parent_pid' => 0,
+        'type' => FLEXIFILTER_COMPONENT,
+        'fid' => $fid,
+        'class' => 'simpletest_flexifilter_class',
+        'weight' => 50,
+        'settings' => array($random_key => $random_name),
+      );
+      $this->flexifilterSave($flexifilter);
+      $flexifilter = $this->flexifilterLoad($fid);
+      $found = FALSE;
+      foreach ($flexifilter['components'] as $component) {
+        if ($component['class'] == 'simpletest_flexifilter_class') {
+          $this->assertFalse($found, t('Make sure exactly one matching component is found.'));
+          $found = TRUE;
+          $this->assertIdentical($component['settings'][$random_key], $random_name, t('Make sure settings are saved and loaded properly.'));
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Flexifilter simple UI test.
+ */
+class FlexifilterSimpleUITest extends FlexifilterTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Flexifilter Simple UI Tests'),
+      'description' => t('Performs various tests with the flexifilter user interface, including enabling, disabling, and deleting a flexifilter.'),
+      'group' => t('Flexifilter'),
+    );
+  }
+
+  /**
+   * Test function.
+   */
+  function testFlexifilterSimpleUI() {
+    $fids = $this->installFlexifilters();
+    $user = $this->drupalCreateUser(array('administer flexifilter'));
+    $this->drupalLogin($user);
+    foreach ($fids as $fid) {
+      // Disable.
+      $this->drupalPost("admin/build/flexifilters/$fid/disable", array(), t('Disable'));
+      $this->assertText(t('Flexifilter disabled.'));
+      $this->assertFalse(db_result(db_query('SELECT enabled FROM {flexifilters} WHERE fid = %d', $fid)), t('Make sure the flexifilter is now disabled.'));
+      // Enable.
+      $this->drupalPost("admin/build/flexifilters/$fid/enable", array(), t('Enable'));
+      $this->assertText(t('Flexifilter enabled.'));
+      $this->assertTrue(db_result(db_query('SELECT enabled FROM {flexifilters} WHERE fid = %d', $fid)), t('Make sure the flexifilter is now enabled.'));
+    }
+    foreach ($fids as $fid) {
+      // Delete.
+      $this->drupalPost("admin/build/flexifilters/$fid/delete", array(), t('Delete'));
+      $this->assertText(t('Flexifilter deleted.'));
+      $flexifilter = $this->flexifilterLoad($fid);
+  	  $this->assertTrue(empty($flexifilter), t('Check to make sure flexifilters delete properly.'));
+    }
+  }
+}

@@ -1,0 +1,36 @@
+/*
+//author: slasant - www.slasant.ru
+ */
+
+#utilities form {bottom:9px;}
+#utilities input.form-submit{padding:0px;}	
+#utilities input.form-text {padding:1px 1px 3px 1px;}
+
+.item-list .pager li.pager-current{
+padding:2px;
+}
+
+.item-list .pager li{
+margin:0px 1px 0 1px;
+}
+
+.item-list .pager li.pager-current{
+padding:2px 2px 3px 4px;
+}
+
+#header-region  {
+	clear: both;
+ 
+  
+ 
+}
+#header-region .blockcontent img{
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+
+.container-inline#node-admin-buttons {
+	padding-left: 30px;
+}

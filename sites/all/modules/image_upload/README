@@ -1,0 +1,38 @@
+Image_upload is a image module for Drupal based on the upload module and inspired by the imagefield module.
+
+Features:
+* AJAX upload and deleting of images
+* Thumbnail generation
+* Categories
+* Thumbnail creation
+* File previews.
+* Lightbox2 integration.
+* Views2 integration. (requires views 6.x-2.0-rc2 or later)
+
+NOTE: If you want lightbox2 integration in views, be sure to select the " Link this field to the full image." option!
+
+Images are added as $node->images[FILE ID], and have a term_name property which you can use.
+
+For example, for displaying a "Default" category, you can use
+
+foreach($node->images as $fid => $image) {
+  if($image->term_name == 'Default') {
+    echo $image->img_html; // HTML for the image thumb, when clicked shows the full image (uses lightbox2 if available)
+  }
+}
+
+Installation
+************
+Enable the module in your modules page, then go to the Image Upload settings page (in Admin => Site Configuration).
+You will see further instructions there (You should probably add some categories and assign them to your node types).
+
+Troubleshooting
+***************
+1) Views display "broken handler" for image_upload fields.
+Clear your views cache. 
+
+Enjoy!
+
+Author:
+Bojan Zivanovic <bojanz@gmail.com>
+http://vividintent.com

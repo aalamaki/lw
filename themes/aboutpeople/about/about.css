@@ -1,0 +1,23 @@
+/*
+//author: slasant - www.slasant.ru
+ */
+
+/*- Sidebar Subpages Menu */
+
+.lsidebar {
+	width: 185px;
+	float: left;
+	margin-top:-10px;
+	margin-right:15px;
+	margin-bottom:0px;
+	margin-left:0px;
+	}
+.rsidebar {
+	width: 185px;
+	float: left;
+	margin-top:-10px;
+	margin-right:0px;
+	margin-bottom:0px;
+	margin-left:15px;
+	}	
+	

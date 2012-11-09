@@ -1,0 +1,38 @@
+<?php
+// $Id: xmlsitemap_node.install,v 1.9.2.11.2.20 2009/05/23 22:41:16 davereid Exp $
+
+/**
+ * @file
+ * Install and uninstall schema and functions for the xmlsitemap_node module.
+ */
+
+/**
+ * Implementation of hook_requirements().
+ */
+function xmlsitemap_node_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  if (!user_access('access content', drupal_anonymous_user())) {
+    $requirements['xmlsitemap_node_anonymous_access'] = array(
+      'title' => $t('Anonymous node access'),
+      'value' => $t('Disabled'),
+      'description' => $t('In order to list content links in the sitemap, the anonymous user must have the <a href="@perm-link">%permission</a> permission.', array('@perm-link' => url('admin/user/permissions', array('fragment' => 'module-node')), '%permission' => 'access content')),
+      'severity' => REQUIREMENT_ERROR,
+    );
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function xmlsitemap_node_uninstall() {
+  // Remove variables.
+  drupal_load('module', 'xmlsitemap_node');
+  $variables = array_keys(xmlsitemap_node_variables());
+  foreach ($variables as $variable) {
+    variable_del($variable);
+  }
+}

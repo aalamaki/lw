@@ -1,0 +1,12 @@
+; $Id: image_upload.info,v 1.1.2.1 2008/10/17 19:30:41 bojanz Exp $
+name = Image Upload
+description = Allows users to upload and attach images to content, similar to Imagefield. Based on the upload module.
+package = Other
+core = 6.x
+
+; Information added by drupal.org packaging script on 2009-01-07
+version = "6.x-1.2"
+core = "6.x"
+project = "image_upload"
+datestamp = "1231334717"
+

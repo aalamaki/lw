@@ -1,0 +1,91 @@
+<?php
+//$Id: cck_lom_author_name.install,v 1.1.2.4 2007/12/15 01:01:28 rconstantine Exp $;
+/**
+ * Not needed unless upgrading from an older version;
+ * see the updates below.
+ */
+function cck_lom_author_name_install() {
+
+}
+
+/**
+ * Implementation of hook_update_N().
+ */
+function cck_lom_author_name_update_1() {
+  $ret = array();
+
+  //name, handle existing table issues
+  include_once('./'. drupal_get_path('module', 'content') .'/content.module');
+  include_once('./'. drupal_get_path('module', 'content') .'/content_admin.inc');
+
+  content_clear_type_cache();
+  $fields = content_fields();
+  
+  foreach ($fields as $field) {
+    switch ($field['type']) {
+      case 'cck_lom_author_email':
+        $db_info = content_database_info($field);
+        $table = $db_info['table'];
+        $fieldemail = $field['field_email'] .'_';
+        $sql = "SHOW COLUMNS FROM {%s}";
+        $results = db_query($sql, $table);
+        while ($result = db_fetch_object($results)) {
+          if ($result->Field == $fieldemail .'role') {
+            $email_type = $result->Type;
+            if ($result->Null == 'Yes') {
+              $email_null = 'NULL';
+            }
+            if (isset($result->Default)) {
+              $email_default = $result->Default;
+            }
+            else {
+              $email_default = '';
+            }
+          }
+          if ($result->Field == $fieldemail .'email') {
+            $email_type = $result->Type;
+            if ($result->Null == 'Yes') {
+              $email_null = 'NULL';
+            }
+            if (isset($result->Default)) {
+              $email_default = $result->Default;
+            }
+            else {
+              $email_default = '';
+            }
+          }
+          elseif ($result->Field == $fieldemail .'name') {
+            $name_type = $result->Type;
+            if ($result->Null == 'Yes') {
+              $name_null = 'NULL';
+            }
+            if (isset($result->Default)) {
+              $name_default = $result->Default;
+            }
+            else {
+              $name_default = '';
+            }
+          }
+          elseif ($result->Field == $fieldemail .'organization') {
+            $organization_type = $result->Type;
+            if ($result->Null == 'Yes') {
+              $organization_null = 'NULL';
+            }
+            if (isset($result->Default)) {
+              $organization_default = $result->Default;
+            }
+            else {
+              $organization_default = '';
+            }
+          }
+        }
+        
+        $ret[] = array(
+          'query' => strtr('The field %field_email has been updated in several respects.', array('%field_email' => $field['field_email'])),
+          'success' => TRUE
+        );
+        break;
+      }
+    }
+return $ret;
+}

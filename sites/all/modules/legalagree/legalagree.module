@@ -1,0 +1,36 @@
+<?php
+
+// $id$
+
+function legalagree_user($op, &$edit, &$user, $category = null) {
+
+	switch($op) {
+	
+		// User is registering
+		case 'register':
+			
+			$fields['decision'] = array(
+			'#type' => 'fieldset', 
+			'#options' => array(t('Hyväksyn käyttöehdot'))
+			);
+			return $fields;
+			
+		case 'validate':
+		
+			if(isset($edit['decision']) && $edit['decision'] != '1') {
+			
+				form_set_error('decision', t('Sinun on hyväksyttävä käyttöehdot rekisteröinnin yhteydessä'));
+			}
+			return;
+		
+		case 'insert':
+		
+			watchdog('user', t('User %user agreed to legal terms',
+			array('%user' => $user->name)));
+			return;
+	}
+}
+			
+?>
+
+		

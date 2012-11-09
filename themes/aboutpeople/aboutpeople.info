@@ -1,0 +1,31 @@
+; $Id: aboutpeople.info,v 1.2 2008/08/04 17:22:35 slasant Exp $
+
+name = Aboutpeople
+
+description = A fresh 3-column layout for Drupal. 
+
+version = VERSION
+
+core = 6.x
+
+engine = phptemplate
+
+stylesheets[all][] = style.css
+regions[header] = Header
+regions[content_top] = Content top
+regions[left] = Left sidebar
+regions[right] = Right sidebar
+regions[content] = Content
+regions[footer] = Footer
+
+
+
+
+
+
+; Information added by drupal.org packaging script on 2008-09-02
+version = "6.x-1.1"
+core = "6.x"
+project = "aboutpeople"
+datestamp = "1220370602"
+

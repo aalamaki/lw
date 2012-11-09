@@ -1,0 +1,417 @@
+# $Id: vi.po,v 1.1.2.1 2008/06/25 11:32:34 yched Exp $
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  field.php,v 1.3 2006/04/16 13:47:13 JonBob
+#  text.module,v 1.34 2006/06/12 19:59:53 JonBob
+#  number.module,v 1.29 2006/07/11 00:15:06 JonBob
+#  content_admin.inc,v 1.16 2006/06/12 19:36:54 JonBob
+#  content.module,v 1.65 2006/07/11 00:18:20 JonBob
+#  nodereference.module,v 1.28 2006/06/12 19:36:54 JonBob
+#  optionwidgets.module,v 1.8 2006/05/01 15:45:29 JonBob
+#  userreference.module,v 1.24 2006/05/05 14:10:44 JonBob
+#  weburl.module,v 1.8 2006/06/12 19:36:54 JonBob
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2006-07-27 08:09-0400\n"
+"PO-Revision-Date: 2007-01-03 00:19+0700\n"
+"Last-Translator: thehongtt <thehongtt@yahoo.com>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: content.module:18
+msgid "Allows administrators to define new content types."
+msgstr "Sallii ylläpitäjien määrittää uusia sisältötyyppejä."
+
+#: content.module:73
+msgid "add content type"
+msgstr "lisää sisältötyyppi"
+
+#: content.module:80
+msgid "fields"
+msgstr "kentät"
+
+#: content.module:119
+#: content_admin.inc:25
+msgid "duplicate"
+msgstr "kopioi"
+
+#: content.module:135
+msgid "manage fields"
+msgstr "hallinnoi kenttiä"
+
+#: content.module:164
+msgid "remove field"
+msgstr "poista kenttä"
+
+#: content_admin.inc:42
+msgid "Content types"
+msgstr "Sisältötyypit"
+
+#: content_admin.inc:90
+msgid "The human-readable name of this content type."
+msgstr "Ihmisten luettava nimi sisältötyypille."
+
+#: content_admin.inc:98
+msgid "A brief description of the content type."
+msgstr "Lyhyt kuvaus sisältötyypille."
+
+#: content_admin.inc:106
+msgid "Instructions to present to the user when adding new content of this type."
+msgstr "Käyttäjille tämän tyyppistä sisältöä lisättäessä näytettävät ohjeet."
+
+#: content_admin.inc:110
+msgid "Title field label"
+msgstr "Kentän nimi"
+
+#: content_admin.inc:113
+msgid "The label for the title field."
+msgstr "Nimi tälle kentälle."
+
+#: content_admin.inc:118
+msgid "Save content type"
+msgstr "Tallenna sisältötyyppi"
+
+#: content_admin.inc:182
+msgid "Saved content type %type."
+msgstr "Tallennettu sisältötyyppi %type"
+
+#: content_admin.inc:198
+msgid "Are you sure you want to delete the content type %type?"
+msgstr "Oletko varma että haluat poistaa sisältötyypin %type?"
+
+#: content_admin.inc:198
+msgid "If you have any content left in this content type, it will be permanently deleted. This action cannot be undone."
+msgstr "Jos sinulla on sisältötyyppiin liitettyä dataa se poistetaan pysyvästi. Muutosta ei voi perua."
+
+#: content_admin.inc:218
+msgid "Deleted content type %type."
+msgstr "Poistettu sisältötyyppi %type"
+
+#: content_admin.inc:248
+msgid "remove"
+msgstr "poista"
+
+#: content_admin.inc:277
+msgid "Add existing field"
+msgstr "Lisää olemassaoleva kenttä"
+
+#: content_admin.inc:286
+msgid "Add field"
+msgstr "Lisää kenttä"
+
+#: content_admin.inc:307
+msgid "Create new field"
+msgstr "Luo uusi kenttä"
+
+#: content_admin.inc:313
+msgid "The human-readable name of this field."
+msgstr "Ihmisten luettava nimi kentälle."
+
+#: content_admin.inc:318
+msgid "Field type"
+msgstr "Kentän tyyppi"
+
+#: content_admin.inc:326
+msgid "Create field"
+msgstr "Luo kenttä"
+
+#: content_admin.inc:335
+msgid "No field modules are enabled. You need to <a href=\"%modules_url\">enable one</a>, such as text.module, before you can add new fields."
+msgstr "kenttälaajennuksia ei ole aktivoitu. Sinun pitää <a href=\"%modules_url\">aktivoida vähintään yksi</a>, esimerkiksi text.module, ennen kuin voit lisätä uusia kenttiä."
+
+#: content_admin.inc:389
+msgid "Added field %label."
+msgstr "Lisätty kenttä nimellä %label."
+
+#: content_admin.inc:432
+msgid "Created field %label."
+msgstr "Luotu kenttä nimellä %label."
+
+#: content_admin.inc:452
+msgid "Are you sure you want to remove the field %field?"
+msgstr "Oletko varma että haluat poistaa kentän %field?"
+
+#: content_admin.inc:452
+msgid "If you have any content left in this field, it will be lost. This action cannot be undone."
+msgstr "Jos sinulla on kenttään liitettyä tietoa se poistetaan Muutosta ei voi perua."
+
+#: content_admin.inc:452
+msgid "Remove"
+msgstr "Poista"
+
+#: content_admin.inc:468
+msgid "Removed field %field from %type."
+msgstr "Poistettu %field tyypistä %type"
+
+#: content_admin.inc:487
+msgid "The field %field no longer exists in any content type, so it was deleted."
+msgstr "Kenttää %field ei löydy enää mistään sisältötyypistä joten se poistettiin automaattisesti."
+
+#: content_admin.inc:511
+msgid "Widget settings"
+msgstr "Widgettien asetukset"
+
+#: content_admin.inc:512
+msgid "These settings apply only to the %field field as it appears in the %type content type."
+msgstr "Nämä lisäasetukset tulevat voimaan vain kentälle %field koska se löytyy sisältötyypistä %type."
+
+#: content_admin.inc:526
+msgid "Widget"
+msgstr "Widgetti"
+
+#: content_admin.inc:541
+msgid "In the node editing form, the heavier fields will sink and the lighter fields will be positioned nearer the top."
+msgstr "Solmun muokkaussivulla mitä suurempi painoarvo kentällä on, sitä alemmaksi sivulla se asettuu."
+
+#: content_admin.inc:552
+msgid "Instructions to present to the user below this field on the editing form."
+msgstr "Näytä nämä ohjeet käyttäjille tämän kentän alla heidän syöttäessään tietoa."
+
+#: content_admin.inc:558
+msgid "Data settings"
+msgstr "Tietojen asetukset"
+
+#: content_admin.inc:559
+msgid "These settings apply to the %field field in every content type in which it appears."
+msgstr "Nämä arvot tulevat voimaan kentälle %field jokaisessa sisältötyypissä missä se esiintyy."
+
+#: content_admin.inc:568
+msgid "Multiple values"
+msgstr "Useita arvoja"
+
+#: content_admin.inc:579
+msgid "Save field settings"
+msgstr "Tallenna kentän asetukset"
+
+#: content_admin.inc:652
+msgid "Saved field %field."
+msgstr "Tallennettu kenttä %field"
+
+#: content_admin.inc:16;87;232;310;533
+msgid "Label"
+msgstr "Otsikko"
+
+#: content_admin.inc:882;971
+msgid "No PostgreSQL mapping found for %type data type."
+msgstr "PostgreSQL kartoitusta ei löydy tyypin %type tiedolle."
+
+#: content_admin.inc:882;971
+msgid "database"
+msgstr "tietokanta"
+
+#: date.module:15
+msgid "Defines a date/time field type. <em>Note: Requires content.module.</em>"
+msgstr "Määrittelee päivä/kellonaika tyypin. <em>Huomio: Laajennus content.module on oltava asennettuna.</em>"
+
+#: date.module:36
+msgid "Year"
+msgstr "Vuosi"
+
+#: date.module:37
+msgid "Year and month"
+msgstr "Vuosi ja kuukausi"
+
+#: date.module:39
+msgid "Date and time"
+msgstr "Päivä ja aika"
+
+#: date.module:43
+msgid "Granularity"
+msgstr "Granulaarisuus"
+
+#: date.module:101
+msgid "Times are entered and displayed with site's time zone"
+msgstr "Ajat jotka syötetään ja näytetään järjestelmän aikavyöhykkeenä."
+
+#: date.module:102
+msgid "Times are entered and displayed with user's time zone"
+msgstr "Ajat jotka syötetään ja näytetään käyttäjän aikavyöhykkeenä."
+
+#: date.module:106
+msgid "Time zone handling"
+msgstr "Aikavyöhykkeen hallinta."
+
+#: date.module:154
+msgid "%name must be entered in ISO 8601 format (YYYY)."
+msgstr "%name on oltava ISO 8601 muotoa (YYYY)."
+
+#: date.module:159
+msgid "%name must be entered in ISO 8601 format (YYYY-MM)."
+msgstr "%name on oltava ISO 8601 muotoa (YYYY-MM)."
+
+#: date.module:164
+msgid "%name must be entered in ISO 8601 format (YYYY-MM-DD)."
+msgstr "%name on oltava ISO 8601 muotoa (YYYY-MM-DD)."
+
+#: date.module:169
+msgid "%name must be entered in ISO 8601 format (YYYY-MM-DDThh:mm:ss)."
+msgstr "%name on oltava ISO 8601 muotoa (YYYY-MM-DDThh:mm:ss)."
+
+#: field.php:77
+#: text.module:44
+msgid "Maximum length"
+msgstr "Suurin pituus"
+
+#: field.php:80
+#: text.module:47
+msgid "The maximum length of the field in characters. Leave blank for an unlimited size."
+msgstr "Suurin sallittu kirjainten määrä kentässä. Jätä tyhjäksi mikäli et halua rajoittaa."
+
+#: field.php:102
+#: number.module:82
+#: text.module:80
+msgid "is equal to"
+msgstr "on samansuuruinen kuin"
+
+#: field.php:103
+#: number.module:83
+#: text.module:81
+msgid "is not equal to"
+msgstr "on erisuuri kuin"
+
+#: field.php:104
+#: text.module:82
+msgid "matches the pattern"
+msgstr "täsmää kuvion kanssa"
+
+#: field.php:265
+#: text.module:159
+msgid "Rows"
+msgstr "Rivejä"
+
+#: field.php:273
+#: text.module:167
+msgid "\"Rows\" must be a positive integer."
+msgstr "\"Rivien\" on oltava positiivinen muuttuja."
+
+#: field.php:180;190
+#: number.module:119
+#: text.module:107
+msgid "Illegal value for %name."
+msgstr "Kielletty arvo kentälle %name."
+
+#: nodereference.module:0
+msgid "nodereference"
+msgstr "nodereference"
+
+#: nodereference.module:15
+msgid "Defines a field type for referencing one node from another. <em>Note: Requires content.module.</em>"
+msgstr "Määrittelee kenttätyypin jonka avulla voidaan viitata toisiin solmuihin. <em>Huomio: Laajennus content.module on oltava asennettuna.</em>"
+
+#: nodereference.module:26
+msgid "node reference autocomplete"
+msgstr "täytä solmureferenssi automaattisesti"
+
+#: nodereference.module:51
+msgid "Content types that can be referenced"
+msgstr "Sisältötyypit joihin voidaan viitata"
+
+#: nodereference.module:204
+msgid "No post with that title exists."
+msgstr "Määrittelemälläsi otsikolla ei löydy solmua."
+
+#: number.module:0
+msgid "number"
+msgstr "numero"
+
+#: number.module:15
+msgid "Defines numeric field types. <em>Note: Requires content.module.</em>"
+msgstr "Määrittelee numeerisen kenttätyypin <em>Huomio: Laajennus content.module on oltava asennettuna.</em>"
+
+#: number.module:38
+msgid "Minimum"
+msgstr "Pienin"
+
+#: number.module:43
+msgid "Maximum"
+msgstr "Suurin"
+
+#: number.module:48
+#: text.module:51
+msgid "Allowed values"
+msgstr "Sallitut arvot"
+
+#: number.module:52
+#: text.module:55
+msgid "The possible values this field can contain. Any other values will result in an error. Enter one value per line."
+msgstr "Kentän mahdolliset arvot. Muiden arvojen syöttäminen aiheuttaa virheen. Syötä yksi arvo riviä kohti."
+
+#: number.module:58
+msgid "\"Minimum\" must be a number."
+msgstr "\"Pienimmän\" tulee olla numero."
+
+#: number.module:61
+msgid "\"Maximum\" must be a number."
+msgstr "\"Suurimman\" on oltava puhelinnumero."
+
+#: number.module:113
+msgid "The value of %name may be no smaller than %min."
+msgstr "Arvo %name ei voi olla pienempi kuin %min."
+
+#: number.module:116
+msgid "The value of %name may be no larger than %max."
+msgstr "Arvo %name ei voi olla suurempi kuin %max."
+
+#: optionwidgets.module:0
+msgid "optionwidgets"
+msgstr "optionwidgets"
+
+#: optionwidgets.module:15
+msgid "Defines selection, check box and radio button widgets for text and numeric fields. <em>Note: Requires content.module, text.module and number.module.</em>"
+msgstr "Määrittelee monivalinta, valintaruutu ja radionappi-widgetit teksti- ja numerokentille. <em>Huomio: Laajennukset content.module, text.module ja number.module on oltava asennettuina.</em>"
+
+#: text.module:0
+msgid "text"
+msgstr "teksti"
+
+#: text.module:15
+msgid "Defines simple text field types. <em>Note: Requires content.module.</em>"
+msgstr "Määrittelee yksinkertaisen tekstikentän. <em>Huomio: Laajennus content.module on oltava asennettuna</em>"
+
+#: text.module:35
+msgid "Filtered text (user selects input format)"
+msgstr "Suodatettu teksti (käyttäjä vaalitsee syöttömuodon)"
+
+#: text.module:35
+msgid "Plain text"
+msgstr "Puhdas teksti"
+
+#: text.module:38
+msgid "Text processing"
+msgstr "Tekstin prosessointi"
+
+#: text.module:144
+msgid "Text Field"
+msgstr "Tekstikenttä"
+
+#: userreference.module:0
+msgid "userreference"
+msgstr "käyttäjäreferenssi"
+
+#: userreference.module:15
+msgid "Defines a field type for referencing a user from a node. <em>Note: Requires content.module.</em>"
+msgstr "Määrittelee kentän tyypin johon viitataan solmusta. <em>Huomio: Laajennus content.module on oltava asennettuna.</em>"
+
+#: userreference.module:176
+msgid "Invalid user name."
+msgstr "Käyttäjänimeä ei löydy."
+
+#: weburl.module:0
+msgid "weburl"
+msgstr "weburl"
+
+#: weburl.module:15
+msgid "Defines simple weburl field types. <em>Note: Requires content.module.</em>"
+msgstr "Määrittää yksinkertaisen weburl-kenttätyypin, <em>Huomio: Laajennus content.module on oltava asennettuna</em>"
+
+#: weburl.module:164;172
+msgid "Not a valid Web URL."
+msgstr "URLia ei ole olemassa."
+
+

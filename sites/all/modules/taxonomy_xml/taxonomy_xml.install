@@ -1,0 +1,27 @@
+<?php
+// $Id: taxonomy_xml.install,v 1.1.2.1 2009/08/30 10:24:59 dman Exp $
+/**
+ * @file Setup for taxonomy_xml
+ */
+ 
+/**
+ * Implementation of hook_install().
+ */
+function taxonomy_xml_install() {
+  drupal_set_message(t("
+    Taxonomy Import and Export functions are now available as TABS
+    at !taxonomy_link
+    <a href='!taxonomy_url'>admin/content/taxonomy</a>.
+    Lots of documentation about supported import/export syntaxed
+    is available in the 'help' folder of this module.
+  ", array(
+    '!taxonomy_link' => l('admin/content/taxonomy', 'admin/content/taxonomy'),
+  )));
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function taxonomy_xml_uninstall() {
+
+}

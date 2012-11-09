@@ -1,0 +1,11 @@
+; $Id: matilda_notify.install,v 1.00.0.0 2009/29/11 23:17:04 aalamaki Exp $
+name = Matilda Notify
+description = Custom module for sending new publishment notifications to client on basis of mail lists.
+package = Matilda Custom Modules
+core = 6.x
+
+version = "6.x-1.x-dev"
+core = "6.x"
+project = "matilda notify"
+datestamp = "1255048581"
+

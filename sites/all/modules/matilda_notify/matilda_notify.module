@@ -1,0 +1,238 @@
+<?php
+// $Id: contact.module,v 1.103.2.1 2008/04/09 21:11:46 goba Exp $
+
+/**
+ * @file
+ * Enables the use of personal and site-wide contact forms.
+ */
+
+/**
+ * Implementation of hook_help().
+ */
+function matilda_notify_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#matilda_notify':
+      return '<p>' . t('This page lets you set up which statistical publication types are available for notifications. Select the titles from the list below, by default they are all allowed. In case you choose to disallow some, you will have to manually allow notifications to be ordered for the new publications.') . '</p>';
+
+    case 'admin/settings/matilda_notify':
+      return '<p>' . t('This page lets you set up which statistical publication types are available for notifications. Select the titles from the list below, by default they are all allowed. In case you choose to disallow some, you will have to manually allow notifications to be ordered for the new publications.') . '</p>';
+  }
+}
+
+/**
+ * Implementation of hook_perm
+ */
+function matilda_notify_perm() {
+  return array('administer matilda notify settings', 'access matilda notifications order form');
+}
+/**
+ * Implementation of hook_menu().
+ */
+function matilda_notify_menu() {
+  $items['admin/settings/matilda_notify'] = array(
+    'title' => 'Matilda Notify Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('matilda_notify_settings'),
+    'access arguments' => array('administer matilda notify settings'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  $items['matilda_notify'] = array(
+    'title' => 'Order Publications',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('matilda_notify_order_form'),
+    'access arguments' => array('access matilda notifications order form'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+function matilda_notify_settings() {
+
+  $form = array(
+    '#id' => 'matilda-notify-settings-form',
+    '#submit' => array('matilda_notify_settings_submit'),
+  );
+
+  $sql = db_query("select * from node")or die("Error");
+  
+  while(($rows = db_fetch_object($sql)) != NULL) {
+  
+    $sql2 = db_query("select * from {matilda_notify_allowed_publications} where nid = '" . $rows->nid . "'")or die("Error2");
+  
+    $array = db_fetch_object($sql2);
+      
+    if($array->nid) {  
+  
+      $form['checkbox' . $rows->nid] = array(
+        '#type' => 'checkbox',
+        '#value' => TRUE,
+        '#title' => t($rows->title),
+        '#id' => $rows->nid,
+      );
+    }
+    else {
+  
+      $form['checkbox' . $rows->nid] = array(
+        '#type' => 'checkbox',
+        '#value' => FALSE,
+        '#title' => t($rows->title),
+        '#id' => $rows->nid,
+      );
+    }
+  }
+
+  $form['submit'] = array('#type' => 'submit',
+    '#value' => t('Save settings'),
+  );
+
+  return $form;
+}
+
+function matilda_notify_order_form() {
+
+  $form = array(
+    '#id' => 'matilda-notify-settings-form',
+    '#submit' => array('matilda_notify_order_form_submit'),
+  );
+
+  $form['email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Email'),
+    '#id' => 'email',
+    '#description' => t('Insert your email address'),
+    '#weight' => -1,
+  );  
+
+  $form['checkboxes'] = array(
+        '#type' => 'fieldset',
+        '#collapsible' => FALSE,
+        '#collapsed' => FALSE,
+        '#description' => t('Choose which publications you wish to receive'),
+        '#weight' => 1,
+      ); 
+
+  $langs = array();
+
+  $sql = db_query("select language, name from {languages}")or die("Error");
+  
+  while(($languages = db_fetch_object($sql)) != NULL) {
+  
+      $langs[$languages->language] = t($languages->name);
+  }
+
+  $form['radio'] = array(
+        '#type' => 'radios',
+        '#description' => t('Choose your preferred language to receive the notifications in'),
+        '#options' => $langs, 
+        '#weight' => 0,
+      ); 
+
+  $sql = db_query("select a.nid, b.title from {matilda_notify_allowed_publications} a left join node b on a.nid=b.nid")or die("Error2");
+  
+  while(($rows = db_fetch_object($sql)) != NULL) {
+  
+      $form['checkboxes']['checkbox' . $rows->nid] = array(
+        '#type' => 'checkbox',
+        '#value' => FALSE,
+        '#title' => t($rows->title),
+        '#id' => $rows->nid,
+      );
+  }
+
+  $form['submit'] = array('#type' => 'submit',
+    '#value' => t('Order'),
+    '#weight' => 2,
+  );
+
+  return $form;
+}
+
+function matilda_notify_order_form_submit($form, &$form_state) {
+
+  $array = array();
+
+  foreach($form['#post'] as $key => $val) {
+      
+     if(substr_count($key, 'checkbox') == NULL) {
+          
+         $array[] = 0;
+     }
+     else { 
+     
+         $array[] = 1; 
+     }
+  }
+  
+  if(!in_array( '1', $array)) {
+     
+    drupal_set_message(t('Please choose an option'));
+  }
+  else {
+  
+     if($form['#post']['email']) {
+     
+        $sql = db_query("select a.email, b.nid from {matilda_notify_mail_addresses} a left join {matilda_notify_user_selections} b on a.mid=b.mid where a.email = '" . $form['#post']['email'] . "' and b.nid = '" . substr($key, 8) . "'")or die("Error22");
+     
+        while(($array = db_fetch_object($sql)) != NULL) {             
+
+           $sql2 = db_query("select * from {matilda_notify_allowed_publications} where nid = '" . $array->nid . "'")or die("Error33");
+        
+           $array2 = db_fetch_object($sql2);
+        
+           if(!$array2->nid) {
+        
+              db_query("delete from {matilda_notify_user_selections} where nid = '" . $array->nid . "'")or die("Error44");
+           }
+        } 
+     
+        foreach($form['#post'] as $key => $val) {
+     
+           if($key == 'email') {
+        
+              $sql = db_query("select email from {matilda_notify_mail_addresses} where email = '" . $val . "'")or die("Error22");
+           
+              $array = db_fetch_object($sql);
+           
+              if(!$array->email) {
+           
+                db_query("insert into {matilda_notify_mail_addresses} values (null, '" . $val . "', '" . time() . "')")or die("Error registering email address");
+              }
+           }     
+   
+           if(substr_count($key, 'checkbox') != NULL) {     
+     
+              $sql = db_query("select a.email, b.nid from {matilda_notify_mail_addresses} a left join {matilda_notify_user_selections} b on a.mid=b.mid where a.email = '" . $form['#post']['email'] . "' and b.nid = '" . substr($key, 8) . "'")or die("Error22f");
+     
+              $array = db_fetch_object($sql);
+           
+              if(!$array->nid) {
+                
+                 db_query("insert into {matilda_notify_user_selections} values ((select mid from {matilda_notify_mail_addresses} where email = '" . $form['#post']['email'] . "'), '" . substr($key, 8) . "', '" . $form['#post']['radio'] . "')")or die("Error adding order");
+              }
+           }
+        } 
+        
+        drupal_set_message(t('Your order was successfully added to the register'));
+     }
+     else {
+  
+       drupal_set_message(t('Please choose an email address'));
+     }
+   }
+}
+
+function matilda_notify_settings_submit($form, &$form_state) {
+
+  db_query("delete from {matilda_notify_allowed_publications}")or die("Error");
+ 
+  foreach($form['#post'] as $key => $val) {
+  
+     if(substr_count($key, 'checkbox') != NULL) {
+     
+        db_query("insert into {matilda_notify_allowed_publications} values ('" . substr($key, 8) . "')")or die("Error");
+     }
+  }
+  
+  drupal_set_message(t('Your settings have been successfully applied.'));
+}
